@@ -7,8 +7,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./ui:/ui
-      - /ui/node_modules
+      - ./ui:/usr/src/app
+      - /usr/src/app/node_modules
   admin-ui:
     container_name: admin-ui
     build:

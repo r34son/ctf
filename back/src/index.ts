@@ -4,6 +4,7 @@ import express from "express";
 import { Request, Response } from "express";
 import { Routes } from "@/routes";
 import { User } from "@/entity/User";
+import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -12,6 +13,7 @@ createConnection()
   .then(async (connection) => {
     // create express app
     const app = express();
+    app.use(cors());
     app.use(express.json());
     app.use(morgan("dev"));
     app.use(helmet());

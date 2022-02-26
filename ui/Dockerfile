@@ -1,7 +1,9 @@
-FROM node:14-alpine
-WORKDIR /ui
-COPY package*.json /ui/
+FROM node:17-alpine
+RUN mkdir -p /usr/src/app/node_modules && chown -R node:node /usr/src/app
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN npm install
-ADD . /ui/
+COPY --chown=node:node . .
 EXPOSE 3000
+USER node
 CMD ["npm", "start"]

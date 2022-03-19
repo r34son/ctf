@@ -1,7 +1,9 @@
-FROM node:14-alpine
-WORKDIR /admin-ui
-COPY package*.json /admin-ui/
+FROM node:17-alpine
+RUN mkdir -p /usr/src/app/node_modules && chown -R node:node /usr/src/app
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN npm install
-ADD . /admin-ui/
-EXPOSE 3000
+COPY --chown=node:node . .
+EXPOSE 3001
+USER node
 CMD ["npm", "start"]

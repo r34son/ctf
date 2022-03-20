@@ -7,12 +7,12 @@ import { BrowserRouter } from 'react-router-dom';
 const theme = createTheme({ palette: { mode: 'dark' } });
 
 export const App = () => (
-  <AuthProvider>
-    <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
-      <BrowserRouter>
+  <ThemeProvider theme={theme}>
+    <CssBaseline enableColorScheme />
+    <BrowserRouter>
+      <AuthProvider>
         <Routes />
-      </BrowserRouter>
-    </ThemeProvider>
-  </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </ThemeProvider>
 );

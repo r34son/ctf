@@ -1,8 +1,6 @@
-import { TokenData } from "@/consts";
 import { StatusCodes } from "@/consts/statusCodes";
-import { JWT_SECRET } from "@/consts/env";
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { TokenService } from "@/services/jwt";
 
 /** Middleware to check whether user is authenticated. */
 export const jwtAuth = async (
@@ -23,7 +21,7 @@ export const jwtAuth = async (
       ? authorizationHeader.slice("bearer".length).trim()
       : authorizationHeader;
 
-    const decodedToken = jwt.verify(token, JWT_SECRET) as TokenData;
+    const decodedToken = TokenService.verifyAccessToken(token);
     if (decodedToken.id) response.locals.id = decodedToken.id;
 
     next();

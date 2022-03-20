@@ -2,9 +2,7 @@ import { StatusCodes } from "@/consts/statusCodes";
 import { Team } from "@/entity/Team";
 import { getRepository } from "typeorm";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { TokenData } from "@/consts";
-import { ADMIN_NAME, ADMIN_PASS, JWT_SECRET } from "@/consts/env";
+import { TokenService } from "@/services/jwt";
 
 class AuthController {
   private teamRepository = getRepository(Team);
@@ -26,9 +24,7 @@ class AuthController {
         .status(StatusCodes.BAD_REQUEST)
         .json({ password: "Invalid password" });
 
-    const accessToken = jwt.sign({ id: team.id } as TokenData, JWT_SECRET, {
-      expiresIn: "2d",
-    });
+    const accessToken = TokenService.getAccessToken({ id: team.id });
 
     response.send({ accessToken, team: { id: team.id, name: team.name } });
   };
@@ -37,10 +33,11 @@ class AuthController {
   adminLogin = async (request: Request<{}, any, Team>, response: Response) => {
     const { name, password } = request.body;
 
-    if (name === ADMIN_NAME && password === ADMIN_PASS) {
-      return response.send(
-        jwt.sign({} as TokenData, JWT_SECRET, { expiresIn: "1d" })
-      );
+    if (
+      name === process.env.ADMIN_NAME &&
+      password === process.env.ADMIN_PASS
+    ) {
+      return response.send(TokenService.getAccessToken({}));
     }
     response.sendStatus(StatusCodes.BAD_REQUEST);
   };

@@ -11,7 +11,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { MouseEventHandler, useState } from 'react';
 import { useAuth } from 'hooks';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 type LoginFormValues = {
   name: string;
@@ -24,20 +23,15 @@ export const LoginForm = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>();
   const auth = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
       await auth.login(data);
-      navigate((location.state as { from: Location })?.from.pathname || '/', {
-        replace: true,
-      });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
         Object.entries<string>(error.response?.data).forEach(([key, message]) =>
           setError(key as keyof LoginFormValues, { message }),
         );
@@ -66,7 +60,7 @@ export const LoginForm = () => {
         <TextField
           fullWidth
           label="Password"
-          autoComplete="password"
+          autoComplete="current-password"
           variant="outlined"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}
@@ -86,7 +80,12 @@ export const LoginForm = () => {
           }}
           {...register('password', { required: true })}
         />
-        <Button variant="contained" size="medium" type="submit">
+        <Button
+          variant="contained"
+          size="medium"
+          type="submit"
+          disabled={isSubmitting}
+        >
           Login
         </Button>
       </Stack>

@@ -5,6 +5,8 @@ import { useAuth } from 'hooks';
 export const Layout = () => {
   const { isAuthorized, team, logout } = useAuth();
 
+  const onLogoutClick = () => logout();
+
   return (
     <Box>
       <AppBar position="static">
@@ -18,7 +20,7 @@ export const Layout = () => {
           {isAuthorized ? (
             <>
               <Chip label={team?.name} variant="outlined" />
-              <Button onClick={logout}>Logout</Button>
+              <Button onClick={onLogoutClick}>Logout</Button>
             </>
           ) : (
             <Button component={Link} to="/login">

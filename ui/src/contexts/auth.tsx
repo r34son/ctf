@@ -8,7 +8,7 @@ interface Auth {
   isAuthorized: boolean;
   team?: Team;
   login: (credentials: Credentials) => Promise<void>;
-  logout: () => void;
+  logout: (to?: string) => void;
 }
 
 const initialAuth = { isAuthorized: false };
@@ -44,10 +44,10 @@ export const AuthProvider: FC = ({ children }) => {
         const to = (location.state as { from: Location })?.from.pathname || '/';
         navigate(to, { replace: true });
       },
-      logout: () => {
+      logout: (to = '/') => {
         TokenService.clearAccessToken();
         setTeam(undefined);
-        navigate('/', { replace: true });
+        navigate(to, { replace: true });
       },
     }),
     [location.state, navigate, team],

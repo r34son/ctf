@@ -52,6 +52,7 @@ export const LoginForm = () => {
           autoFocus
           fullWidth
           label="Team name"
+          autoComplete="username"
           variant="outlined"
           error={Boolean(errors.name)}
           helperText={errors.name?.message}

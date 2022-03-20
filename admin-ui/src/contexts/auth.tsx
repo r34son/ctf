@@ -14,7 +14,7 @@ const initialAuth = { isAuthorized: false } as Auth;
 export const AuthContext = createContext<Auth>(initialAuth);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [isAuthorized, setisAuthorized] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const auth = useMemo(
     () => ({
@@ -22,11 +22,11 @@ export const AuthProvider: FC = ({ children }) => {
       login: async (credentials: Credentials) => {
         const token = await AuthApi.login(credentials);
         TokenService.setAccessToken(token);
-        setisAuthorized(true);
+        setIsAuthorized(true);
       },
       logout: () => {
         TokenService.clearAccessToken();
-        setisAuthorized(false);
+        setIsAuthorized(false);
       },
     }),
     [isAuthorized],

@@ -4,24 +4,19 @@ import { createContext, FC, useEffect, useMemo, useState } from 'react';
 import { TokenService } from 'services/token';
 import { Location, useLocation, useNavigate } from 'react-router-dom';
 
-const initialTeam = null as unknown as Team;
-
 interface Auth {
   isAuthorized: boolean;
-  team: Team;
+  team?: Team;
   login: (credentials: Credentials) => Promise<void>;
   logout: () => void;
 }
 
-const initialAuth = {
-  isAuthorized: false,
-  team: initialTeam,
-};
+const initialAuth = { isAuthorized: false };
 
 export const AuthContext = createContext<Auth>(initialAuth as Auth);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [team, setTeam] = useState<Team>(initialTeam);
+  const [team, setTeam] = useState<Team>();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,7 +46,7 @@ export const AuthProvider: FC = ({ children }) => {
       },
       logout: () => {
         TokenService.clearAccessToken();
-        setTeam(initialTeam);
+        setTeam(undefined);
         navigate('/', { replace: true });
       },
     }),

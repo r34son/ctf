@@ -42,7 +42,7 @@ export const LoginForm = () => {
     e.preventDefault();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
         <TextField
           autoFocus
@@ -55,7 +55,6 @@ export const LoginForm = () => {
         <TextField
           fullWidth
           label="Password"
-          autoComplete="password"
           variant="outlined"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}

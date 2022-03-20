@@ -1,14 +1,20 @@
 import { LoginPage } from 'pages/Login';
-import { Routes as RouterRoutes, Route, useLocation } from 'react-router-dom';
+import { Routes as RouterRoutes, Route } from 'react-router-dom';
+import { Layout } from 'components/Layout';
+import { useAuth } from 'hooks';
 
 /** Роуты приложения. */
 export const Routes = () => {
-  const location = useLocation();
+  const { isAuthorized } = useAuth();
 
   return (
-    <RouterRoutes location={location}>
-      <Route path="/test" element={<div>sdasdasd</div>} />
-      <Route path="/login" element={<LoginPage />} />
+    <RouterRoutes>
+      <Route element={<Layout />}>
+        <Route
+          path="/"
+          element={isAuthorized ? <div>sdasdasd</div> : <LoginPage />}
+        />
+      </Route>
     </RouterRoutes>
   );
 };

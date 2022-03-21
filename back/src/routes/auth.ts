@@ -15,6 +15,5 @@ const router = Router();
 
 router.post("/login", loginRateLimiter, AuthController.login);
 router.post("/login-admin", loginRateLimiter, AuthController.adminLogin);
-router.get("/me", jwtAuth, AuthController.getTeamByToken);
 
 export default router;

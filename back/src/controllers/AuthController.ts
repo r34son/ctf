@@ -24,9 +24,10 @@ class AuthController {
         .status(StatusCodes.BAD_REQUEST)
         .json({ password: "Invalid password" });
 
-    const accessToken = TokenService.getAccessToken({ id: team.id });
+    const teamPayload = { id: team.id, name: team.name };
+    const accessToken = TokenService.getAccessToken(teamPayload);
 
-    response.send({ accessToken, team: { id: team.id, name: team.name } });
+    response.send({ accessToken, team: teamPayload });
   };
 
   /** Admin login method. */
@@ -40,15 +41,6 @@ class AuthController {
       return response.send(TokenService.getAccessToken({}));
     }
     response.sendStatus(StatusCodes.BAD_REQUEST);
-  };
-
-  /** Return team by jwt token. */
-  getTeamByToken = async (_request: Request, response: Response) => {
-    const team = await this.teamRepository.findOne(response.locals.id);
-    if (!team) {
-      return response.sendStatus(StatusCodes.BAD_REQUEST);
-    }
-    response.json(team);
   };
 }
 

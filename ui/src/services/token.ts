@@ -1,3 +1,6 @@
+import jwtDecode from 'jwt-decode';
+import { Team } from 'interfaces';
+
 export class TokenService {
   private static readonly ACCESS_TOKEN_KEY = 'token';
 
@@ -8,4 +11,6 @@ export class TokenService {
 
   static clearAccessToken = () =>
     localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+
+  static decode = (token: string) => jwtDecode<Team>(token);
 }

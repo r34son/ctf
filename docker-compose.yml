@@ -15,9 +15,11 @@ services:
       context: ./admin-ui
     ports:
       - "3001:3000"
+    environment:
+      WDS_SOCKET_PORT: 3001
     volumes:
-      - ./admin-ui:/admin-ui
-      - /admin-ui/node_modules
+      - ./admin-ui:/usr/src/app
+      - /usr/src/app/node_modules
   back:
     container_name: back
     build:

@@ -1,7 +1,7 @@
-import { LoginPage } from 'pages/Login';
+import { LoginPage } from 'features/auth/LoginPage';
 import { Routes as RouterRoutes, Route } from 'react-router-dom';
-import { ProtectedRoute } from 'components/ProtectedRoute';
-import { Layout } from 'components/Layout';
+import { ProtectedRoute } from 'common/components/ProtectedRoute';
+import { Layout } from 'common/components/Layout';
 
 /** Роуты приложения. */
 export const Routes = () => (

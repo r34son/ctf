@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { Team } from 'interfaces';
+import { Team } from 'common/interfaces';
 
 export class TokenService {
   private static readonly ACCESS_TOKEN_KEY = 'token';

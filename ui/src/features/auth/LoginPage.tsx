@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Drawer, Typography } from '@mui/material';
-import { LoginForm } from 'components/LoginForm';
+import { LoginForm } from 'features/auth/LoginForm';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

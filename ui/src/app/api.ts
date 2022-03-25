@@ -1,6 +1,5 @@
-/* eslint-disable no-param-reassign */
 import axios, { AxiosRequestHeaders } from 'axios';
-import { TokenService } from 'services/token';
+import { TokenService } from 'features/auth/tokenService';
 
 const api = axios.create({ baseURL: 'http://localhost:3002' });
 

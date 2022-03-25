@@ -1,11 +1,17 @@
 import { AppBar, Box, Button, Toolbar, Typography, Chip } from '@mui/material';
-import { Link, Outlet } from 'react-router-dom';
-import { useAuth } from 'hooks';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { authSelector, logout } from 'features/auth/authSlice';
 
 export const Layout = () => {
-  const { isAuthorized, team, logout } = useAuth();
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector(authSelector);
+  const navigate = useNavigate();
 
-  const onLogoutClick = () => logout();
+  const onLogoutClick = () => {
+    dispatch(logout());
+    navigate('/', { replace: true });
+  };
 
   return (
     <Box>
@@ -17,9 +23,9 @@ export const Layout = () => {
           <Button component={Link} to="/test">
             test
           </Button>
-          {isAuthorized ? (
+          {auth.isAuthorized ? (
             <>
-              <Chip label={team?.name} variant="outlined" />
+              <Chip label={auth.team.name} variant="outlined" />
               <Button onClick={onLogoutClick}>Logout</Button>
             </>
           ) : (

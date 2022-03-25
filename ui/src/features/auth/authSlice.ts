@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 import { Team } from 'common/interfaces';
 import { api } from 'app/api';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { TokenService } from './tokenService';
 import { LoginData, LoginResponse, LoginErrorResponse } from './types';
 

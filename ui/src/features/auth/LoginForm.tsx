@@ -9,13 +9,11 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { MouseEventHandler, useState } from 'react';
-import { useAuth } from 'hooks';
-import axios from 'axios';
-
-type LoginFormValues = {
-  name: string;
-  password: string;
-};
+import { useAppDispatch } from 'app/hooks';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
+import { login } from './authSlice';
+import { LoginData, LoginErrorResponse } from './types';
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,16 +22,21 @@ export const LoginForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>();
-  const auth = useAuth();
+  } = useForm<LoginData>();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<LoginData> = async (data) => {
     try {
-      await auth.login(data);
+      await dispatch(login(data)).unwrap();
+      const to = (location.state as { from: Location })?.from.pathname || '/';
+      navigate(to, { replace: true });
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 400) {
-        Object.entries<string>(error.response?.data).forEach(([key, message]) =>
-          setError(key as keyof LoginFormValues, { message }),
+      const typedError = error as AxiosResponse<LoginErrorResponse>;
+      if (typedError?.status === 400) {
+        Object.entries<string>(typedError.data).forEach(([key, message]) =>
+          setError(key as keyof LoginData, { message }),
         );
       }
     }

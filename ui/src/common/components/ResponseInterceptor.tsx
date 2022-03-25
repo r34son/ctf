@@ -1,11 +1,14 @@
 import { AxiosError } from 'axios';
-import { useAuth } from 'hooks';
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
-import { api } from 'services/api';
+import { api } from 'app/api';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from 'app/hooks';
+import { logout } from 'features/auth/authSlice';
 
 export const ResponseInterceptor = () => {
-  const auth = useAuth();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -14,7 +17,8 @@ export const ResponseInterceptor = () => {
       (error: AxiosError) => {
         // Unauthorized
         if (error.response?.status === 401) {
-          auth.logout('/login');
+          dispatch(logout());
+          navigate('/login');
         }
         // Request is rate limited
         if (error.response?.status === 429) {
@@ -30,7 +34,7 @@ export const ResponseInterceptor = () => {
     return () => {
       api.interceptors.response.eject(interceptorId);
     };
-  }, [auth, enqueueSnackbar]);
+  }, [dispatch, enqueueSnackbar, navigate]);
 
   return null;
 };

@@ -1,9 +1,8 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Routes } from 'Routes';
-import { AuthProvider } from 'contexts/auth';
 import { BrowserRouter } from 'react-router-dom';
-import { ResponseInterceptor } from 'components/ResponseInterceptor';
+import { ResponseInterceptor } from 'common/components/ResponseInterceptor';
 import { SnackbarProvider } from 'notistack';
 
 const theme = createTheme({ palette: { mode: 'dark' } });
@@ -17,10 +16,8 @@ export const App = () => (
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >
       <BrowserRouter>
-        <AuthProvider>
-          <ResponseInterceptor />
-          <Routes />
-        </AuthProvider>
+        <ResponseInterceptor />
+        <Routes />
       </BrowserRouter>
     </SnackbarProvider>
   </ThemeProvider>

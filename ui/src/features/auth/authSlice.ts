@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 import { TokenService } from './tokenService';
 import { LoginData, LoginResponse, LoginErrorResponse } from './types';
 
-export type AuthState =
+type AuthState =
   | {
       isAuthorized: true;
       team: Team;

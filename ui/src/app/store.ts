@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import auth from 'features/auth/authSlice';
+import timer from 'features/timer/timerSlice';
 
 export const store = configureStore({
   reducer: {
     auth,
+    timer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

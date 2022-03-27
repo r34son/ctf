@@ -4,7 +4,16 @@ import { Routes } from 'components/Routes';
 import { AuthProvider } from 'contexts/auth';
 import { BrowserRouter } from 'react-router-dom';
 
-const theme = createTheme({ palette: { mode: 'dark' } });
+const theme = createTheme({
+  palette: { mode: 'dark' },
+  components: {
+    MuiButton: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+    },
+  },
+});
 
 export const App = () => (
   <ThemeProvider theme={theme}>

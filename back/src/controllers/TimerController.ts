@@ -4,9 +4,9 @@ import { getSSEBody } from "@/utils";
 import { Response, Request } from "express";
 
 export enum TimerStatus {
-  RUNNING,
-  PAUSED,
-  STOPPED,
+  RUNNING = "running",
+  PAUSED = "paused",
+  STOPPED = "stopped",
 }
 
 class TimerController extends SSE {
@@ -15,11 +15,7 @@ class TimerController extends SSE {
   private status: TimerStatus = TimerStatus.STOPPED;
 
   timerEvents = async (_request: Request, response: Response) => {
-    response.writeHead(StatusCodes.OK, {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-    });
+    response.writeHead(StatusCodes.OK, this.httpHeaders);
     if (this.status === TimerStatus.RUNNING)
       response.write(
         getSSEBody("init", { status: this.status, endDate: this.endDate })

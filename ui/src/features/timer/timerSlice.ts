@@ -3,6 +3,7 @@ import { RootState } from 'app/store';
 import { TimerStatus } from './types';
 
 interface TimerState {
+  date?: number;
   status: TimerStatus;
 }
 
@@ -14,13 +15,19 @@ export const timerSlice = createSlice({
   name: 'timer',
   initialState,
   reducers: {
+    subscribeEvents: () => {},
+    unsubscribeEvents: () => {},
+    setDate: (state, action: PayloadAction<number | undefined>) => {
+      state.date = action.payload;
+    },
     setStatus: (state, action: PayloadAction<TimerStatus>) => {
       state.status = action.payload;
     },
   },
 });
 
-export const { setStatus } = timerSlice.actions;
+export const { subscribeEvents, unsubscribeEvents, setDate, setStatus } =
+  timerSlice.actions;
 
 export const timerSelector = (s: RootState) => s.timer;
 

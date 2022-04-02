@@ -3,6 +3,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Routes } from 'components/Routes';
 import { AuthProvider } from 'contexts/auth';
 import { BrowserRouter } from 'react-router-dom';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateAdapter from '@mui/lab/AdapterMoment';
 
 const theme = createTheme({
   palette: { mode: 'dark' },
@@ -16,12 +18,14 @@ const theme = createTheme({
 });
 
 export const App = () => (
-  <ThemeProvider theme={theme}>
-    <CssBaseline enableColorScheme />
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
-    </BrowserRouter>
-  </ThemeProvider>
+  <LocalizationProvider dateAdapter={DateAdapter}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
+  </LocalizationProvider>
 );

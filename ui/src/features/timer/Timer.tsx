@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { useEffect, useRef } from 'react';
 import Countdown, { CountdownApi } from 'react-countdown';
@@ -35,6 +36,14 @@ export const Timer = () => {
       date={date}
       ref={(countdown) => {
         countdownApiRef.current = countdown?.getApi();
+      }}
+      renderer={({ completed, formatted: { hours, minutes, seconds } }) => {
+        if (completed) return null;
+        return (
+          <Typography variant="button" fontSize="1.5rem">
+            {hours}:{minutes}:{seconds}
+          </Typography>
+        );
       }}
     />
   );

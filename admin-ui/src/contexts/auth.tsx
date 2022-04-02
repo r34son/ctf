@@ -1,7 +1,9 @@
 import { Credentials } from 'interfaces';
 import * as AuthApi from 'services/api/auth';
-import { createContext, FC, useMemo, useState } from 'react';
+import { createContext, FC, useMemo, useEffect, useState } from 'react';
 import { TokenService } from 'services/token';
+import { api } from 'services/api';
+import { AxiosError } from 'axios';
 
 interface Auth {
   isAuthorized: boolean;
@@ -16,6 +18,30 @@ export const AuthContext = createContext<Auth>(initialAuth);
 export const AuthProvider: FC = ({ children }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
 
+  const logout = () => {
+    TokenService.clearAccessToken();
+    setIsAuthorized(false);
+  };
+
+  useEffect(() => {
+    const interceptorId = api.interceptors.response.use(
+      (response) => response.data,
+      (error: AxiosError) => {
+        // Unauthorized
+        if (error.response?.status === 401) logout();
+        // Request is rate limited
+        // eslint-disable-next-line no-alert
+        if (error.response?.status === 429) alert(error.response.data);
+
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      api.interceptors.response.eject(interceptorId);
+    };
+  }, []);
+
   const auth = useMemo(
     () => ({
       isAuthorized,
@@ -24,10 +50,7 @@ export const AuthProvider: FC = ({ children }) => {
         TokenService.setAccessToken(token);
         setIsAuthorized(true);
       },
-      logout: () => {
-        TokenService.clearAccessToken();
-        setIsAuthorized(false);
-      },
+      logout,
     }),
     [isAuthorized],
   );

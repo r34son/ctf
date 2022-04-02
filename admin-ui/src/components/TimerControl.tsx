@@ -1,11 +1,12 @@
-import { Card, Button, CardActions } from '@mui/material';
+import { Card, Button, CardActions, Stack } from '@mui/material';
 import { TimerStatus } from 'interfaces';
 import { useEffect, useState } from 'react';
 import { api } from 'services/api';
-import { start, stop, pause, resume } from 'services/api/timer';
+import { stop, pause, resume } from 'services/api/timer';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import PauseIcon from '@mui/icons-material/Pause';
+import { StartTimerForm } from './StartTimerForm';
 
 export const TimerControl = () => {
   const [status, setStatus] = useState<TimerStatus>();
@@ -30,7 +31,6 @@ export const TimerControl = () => {
   // const isStopped = status === TimerStatus.STOPPED;
   const isPaused = status === TimerStatus.PAUSED;
 
-  const onStartClick = () => start(1000000);
   const onStopClick = () => stop();
   const onPauseClick = () => pause();
   const onResumeClick = () => resume();
@@ -38,30 +38,30 @@ export const TimerControl = () => {
   return (
     <Card>
       <CardActions sx={{ justifyContent: 'center' }}>
-        <Button onClick={onStartClick} startIcon={<PlayArrowIcon />}>
-          Start / Restart
-        </Button>
-        <Button
-          disabled={!isRunning}
-          onClick={onPauseClick}
-          startIcon={<PauseIcon />}
-        >
-          Pause
-        </Button>
-        <Button
-          disabled={!isPaused}
-          onClick={onResumeClick}
-          startIcon={<PlayArrowIcon />}
-        >
-          Resume
-        </Button>
-        <Button
-          disabled={!isRunning}
-          onClick={onStopClick}
-          startIcon={<StopIcon />}
-        >
-          Stop
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <StartTimerForm />
+          <Button
+            disabled={!isRunning}
+            onClick={onPauseClick}
+            startIcon={<PauseIcon />}
+          >
+            Pause
+          </Button>
+          <Button
+            disabled={!isPaused}
+            onClick={onResumeClick}
+            startIcon={<PlayArrowIcon />}
+          >
+            Resume
+          </Button>
+          <Button
+            disabled={!isRunning}
+            onClick={onStopClick}
+            startIcon={<StopIcon />}
+          >
+            Stop
+          </Button>
+        </Stack>
       </CardActions>
     </Card>
   );

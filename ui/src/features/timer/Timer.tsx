@@ -37,11 +37,11 @@ export const Timer = () => {
       ref={(countdown) => {
         countdownApiRef.current = countdown?.getApi();
       }}
-      renderer={({ completed, formatted: { hours, minutes, seconds } }) => {
+      renderer={({ completed, formatted: { hours, minutes } }) => {
         if (completed) return null;
         return (
           <Typography variant="button" fontSize="1.5rem">
-            {hours}:{minutes}:{seconds}
+            {hours}:{minutes}
           </Typography>
         );
       }}

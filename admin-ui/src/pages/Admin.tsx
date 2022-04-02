@@ -1,4 +1,5 @@
 import { Container, Grid } from '@mui/material';
+import { TeamControl } from 'components/TeamControl';
 import { TimerControl } from 'components/TimerControl';
 
 export const AdminPage = () => (
@@ -6,6 +7,9 @@ export const AdminPage = () => (
     <Grid container spacing={2} p={2}>
       <Grid item xs={12}>
         <TimerControl />
+      </Grid>
+      <Grid item xs={4}>
+        <TeamControl />
       </Grid>
     </Grid>
   </Container>

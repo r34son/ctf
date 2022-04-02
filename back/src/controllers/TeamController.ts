@@ -1,9 +1,9 @@
 import { StatusCodes } from "@/consts/statusCodes";
-import { ValidationError } from "class-validator";
-import { getRepository } from "typeorm";
-import { Request, Response } from "express";
 import { Team } from "@/entity/Team";
 import { validationErrorsToMessages } from "@/utils";
+import { ValidationError } from "class-validator";
+import { Request, Response } from "express";
+import { getRepository } from "typeorm";
 
 class TeamController {
   private teamRepository = getRepository(Team);
@@ -11,7 +11,7 @@ class TeamController {
   /** Team creation method. */
   create = async (request: Request<{}, any, Team>, response: Response) => {
     try {
-      const team = await this.teamRepository.save(
+      const { password, ...team } = await this.teamRepository.save(
         this.teamRepository.create(request.body)
       );
       response.json(team);

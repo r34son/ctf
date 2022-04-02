@@ -1,20 +1,16 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Button,
   IconButton,
   InputAdornment,
-  TextField,
   Stack,
+  TextField,
 } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { MouseEventHandler, useState } from 'react';
 import { useAuth } from 'hooks';
-
-type LoginFormValues = {
-  name: string;
-  password: string;
-};
+import { TeamCredentials } from 'interfaces';
+import { MouseEventHandler, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,10 +19,10 @@ export const LoginForm = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginFormValues>();
+  } = useForm<TeamCredentials>();
   const auth = useAuth();
 
-  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<TeamCredentials> = async (data) => {
     try {
       await auth.login(data);
     } catch (error) {
@@ -48,14 +44,12 @@ export const LoginForm = () => {
           autoFocus
           fullWidth
           label="Login"
-          variant="outlined"
           error={Boolean(errors.name)}
           {...register('name', { required: true })}
         />
         <TextField
           fullWidth
           label="Password"
-          variant="outlined"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}
           InputProps={{
@@ -73,7 +67,7 @@ export const LoginForm = () => {
           }}
           {...register('password', { required: true })}
         />
-        <Button variant="contained" size="medium" type="submit">
+        <Button variant="contained" type="submit">
           Login
         </Button>
       </Stack>

@@ -1,17 +1,17 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Button,
   IconButton,
   InputAdornment,
-  TextField,
   Stack,
+  TextField,
 } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { MouseEventHandler, useState } from 'react';
 import { useAppDispatch } from 'app/hooks';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
+import { MouseEventHandler, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { login } from './authSlice';
 import { LoginData, LoginErrorResponse } from './types';
 
@@ -56,7 +56,6 @@ export const LoginForm = () => {
           fullWidth
           label="Team name"
           autoComplete="username"
-          variant="outlined"
           error={Boolean(errors.name)}
           helperText={errors.name?.message || ' '}
           {...register('name', { required: true })}
@@ -65,7 +64,6 @@ export const LoginForm = () => {
           fullWidth
           label="Password"
           autoComplete="current-password"
-          variant="outlined"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}
           helperText={errors.password?.message || ' '}
@@ -84,12 +82,7 @@ export const LoginForm = () => {
           }}
           {...register('password', { required: true })}
         />
-        <Button
-          variant="contained"
-          size="medium"
-          type="submit"
-          disabled={isSubmitting}
-        >
+        <Button variant="contained" type="submit" disabled={isSubmitting}>
           Login
         </Button>
       </Stack>

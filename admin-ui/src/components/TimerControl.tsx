@@ -28,7 +28,6 @@ export const TimerControl = () => {
   }, []);
 
   const isRunning = status === TimerStatus.RUNNING;
-  // const isStopped = status === TimerStatus.STOPPED;
   const isPaused = status === TimerStatus.PAUSED;
 
   const onStopClick = () => stop();

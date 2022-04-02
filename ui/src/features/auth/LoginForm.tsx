@@ -58,7 +58,7 @@ export const LoginForm = () => {
           autoComplete="username"
           variant="outlined"
           error={Boolean(errors.name)}
-          helperText={errors.name?.message}
+          helperText={errors.name?.message || ' '}
           {...register('name', { required: true })}
         />
         <TextField
@@ -68,7 +68,7 @@ export const LoginForm = () => {
           variant="outlined"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}
-          helperText={errors.password?.message}
+          helperText={errors.password?.message || ' '}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

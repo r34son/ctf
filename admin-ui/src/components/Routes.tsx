@@ -1,4 +1,5 @@
 import { LoginPage } from 'pages/Login';
+import { AdminPage } from 'pages/Admin';
 import { Routes as RouterRoutes, Route } from 'react-router-dom';
 import { Layout } from 'components/Layout';
 import { useAuth } from 'hooks';
@@ -12,7 +13,7 @@ export const Routes = () => {
       <Route element={<Layout />}>
         <Route
           path="/"
-          element={isAuthorized ? <div>sdasdasd</div> : <LoginPage />}
+          element={isAuthorized ? <AdminPage /> : <LoginPage />}
         />
       </Route>
     </RouterRoutes>

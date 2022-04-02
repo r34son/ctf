@@ -1,4 +1,4 @@
-import { Credentials } from 'interfaces';
+import { TeamCredentials } from 'interfaces';
 import * as AuthApi from 'services/api/auth';
 import { createContext, FC, useMemo, useEffect, useState } from 'react';
 import { TokenService } from 'services/token';
@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 
 interface Auth {
   isAuthorized: boolean;
-  login: (credentials: Credentials) => Promise<void>;
+  login: (credentials: TeamCredentials) => Promise<void>;
   logout: () => void;
 }
 
@@ -45,7 +45,7 @@ export const AuthProvider: FC = ({ children }) => {
   const auth = useMemo(
     () => ({
       isAuthorized,
-      login: async (credentials: Credentials) => {
+      login: async (credentials: TeamCredentials) => {
         const token = await AuthApi.login(credentials);
         TokenService.setAccessToken(token);
         setIsAuthorized(true);

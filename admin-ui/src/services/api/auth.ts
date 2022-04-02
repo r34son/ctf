@@ -1,5 +1,5 @@
-import { Credentials } from 'interfaces';
+import { TeamCredentials } from 'interfaces';
 import { api } from 'services/api';
 
-export const login = async (credentials: Credentials) =>
+export const login = async (credentials: TeamCredentials) =>
   api.post<string>('/auth/login-admin', credentials);

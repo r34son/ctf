@@ -1,4 +1,9 @@
-export interface Credentials {
+export interface Team {
+  id: number;
+  name: string;
+}
+
+export interface TeamCredentials {
   name: string;
   password: string;
 }

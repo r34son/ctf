@@ -1,24 +1,42 @@
-import TimePicker from '@mui/lab/TimePicker';
-import { Button, TextField, TextFieldProps } from '@mui/material';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { start } from 'services/api/timer';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { LoadingButton } from '@mui/lab';
+import TimePicker from '@mui/lab/TimePicker';
+import { TextField, TextFieldProps } from '@mui/material';
+import { AxiosError } from 'axios';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { start } from 'services/api/timer';
 
 type StartTimerFormValues = {
   duration: moment.Moment | null;
 };
 
 export const StartTimerForm = () => {
-  const { control, handleSubmit } = useForm<StartTimerFormValues>({
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<StartTimerFormValues>({
     defaultValues: { duration: null },
   });
+  const { enqueueSnackbar } = useSnackbar();
 
-  const onSubmit: SubmitHandler<StartTimerFormValues> = ({ duration }) => {
-    const normalizedDuration = moment.duration(
-      (duration as moment.Moment).format('hh:mm'),
-    );
-    start(+normalizedDuration.asMilliseconds());
+  const onSubmit: SubmitHandler<StartTimerFormValues> = async ({
+    duration,
+  }) => {
+    try {
+      const normalizedDuration = moment.duration(
+        (duration as moment.Moment).format('hh:mm'),
+      );
+      await start(+normalizedDuration.asMilliseconds());
+      enqueueSnackbar('Timer started.', { variant: 'success' });
+      reset();
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      enqueueSnackbar(axiosError?.response?.data.error, { variant: 'error' });
+    }
   };
 
   return (
@@ -54,9 +72,14 @@ export const StartTimerForm = () => {
           />
         )}
       />
-      <Button type="submit" startIcon={<PlayArrowIcon />}>
+      <LoadingButton
+        variant="outlined"
+        loading={isSubmitting}
+        type="submit"
+        startIcon={<PlayArrowIcon />}
+      >
         Start / Restart
-      </Button>
+      </LoadingButton>
     </form>
   );
 };

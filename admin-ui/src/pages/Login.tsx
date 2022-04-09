@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { LoginForm } from 'components/LoginForm';
+import { LoginForm } from 'components/forms/LoginForm';
 
 const Container = styled.div`
   display: flex;

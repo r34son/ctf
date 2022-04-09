@@ -8,6 +8,14 @@ export interface TeamCredentials {
   password: string;
 }
 
+export interface Task {
+  title: string;
+  category: string;
+  description: string;
+  points: number;
+  flag: string;
+}
+
 export enum TimerStatus {
   RUNNING = 'running',
   PAUSED = 'paused',

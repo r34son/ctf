@@ -1,10 +1,11 @@
+import cors from "cors";
 import "dotenv/config";
+import express from "express";
+import helmet from "helmet";
+import morgan from "morgan";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import express from "express";
-import cors from "cors";
-import morgan from "morgan";
-import helmet from "helmet";
+import { errorHandler } from "./middlewares/errorHandler";
 
 (async () => {
   try {
@@ -17,6 +18,7 @@ import helmet from "helmet";
 
     app.use("/", require("@/routes").default);
 
+    app.use(errorHandler);
     app.listen(80);
 
     console.log("Express server has started.");

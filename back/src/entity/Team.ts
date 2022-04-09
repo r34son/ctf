@@ -1,12 +1,17 @@
+import bcrypt from "bcrypt";
 import { IsNotEmpty, validateOrReject } from "class-validator";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
   BeforeInsert,
   BeforeUpdate,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from "typeorm";
-import bcrypt from "bcrypt";
+import { Task } from "./Task";
+import { TeamSolvedTasks } from "./TeamSolvedTasks";
 
 @Entity()
 export class Team {
@@ -21,6 +26,13 @@ export class Team {
   @IsNotEmpty({ message: "Поле password обязательно" })
   password: string;
 
+  @OneToMany(() => TeamSolvedTasks, (teamSolvedTasks) => teamSolvedTasks.team)
+  public teamSolvedTasks!: TeamSolvedTasks[];
+
+  @ManyToMany(() => Task)
+  @JoinTable({ name: "team_solved_tasks" })
+  solvedTasks: Task[];
+
   auth(password: string) {
     return bcrypt.compareSync(password, this.password);
   }
@@ -32,7 +44,10 @@ export class Team {
   }
 
   @BeforeInsert()
+  @BeforeUpdate()
   private hashPassword() {
-    this.password = bcrypt.hashSync(this.password, 8);
+    if (this.password) {
+      this.password = bcrypt.hashSync(this.password, 8);
+    }
   }
 }

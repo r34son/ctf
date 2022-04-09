@@ -2,9 +2,11 @@ import { ValidationError } from "class-validator";
 
 export const validationErrorsToMessages = (errors: ValidationError[]) =>
   errors.reduce(
-    (messages: string[], error) =>
-      messages.concat(Object.values(error.constraints)),
-    []
+    (error: Record<string, string>, validationError) => ({
+      ...error,
+      [validationError.property]: Object.values(validationError.constraints)[0],
+    }),
+    {}
   );
 
 export const getSSEBody = <T extends unknown>(event?: string, data?: T) =>

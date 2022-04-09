@@ -6,7 +6,7 @@
   "password": "pass",
   "database": "db",
   "synchronize": true,
-  "logging": false,
+  "logging": ["error"],
   "entities": ["src/entity/**/*.ts"],
   "migrations": ["src/migration/**/*.ts"],
   "subscribers": ["src/subscriber/**/*.ts"],

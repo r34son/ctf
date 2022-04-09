@@ -39,6 +39,7 @@ export const CreateTeamForm = () => {
         />
         <TextField
           fullWidth
+          autoComplete="new-password"
           label="Password"
           error={Boolean(errors.password)}
           {...register('password', { required: true })}

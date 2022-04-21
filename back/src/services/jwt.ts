@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-type TokenData = { id?: number };
+export type TokenData = { id?: number };
 
 export class TokenService {
   static getAccessToken = (data: TokenData) =>

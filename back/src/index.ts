@@ -1,27 +1,45 @@
-import cors from "cors";
+import { dataSource } from "@/dataSource";
+import { errorHandler } from "@/middlewares/errorHandler";
+import { socketIoJwtAuth } from "@/middlewares/jwt";
+import cors, { CorsOptions } from "cors";
 import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import { AddressInfo } from "net";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
-import { errorHandler } from "./middlewares/errorHandler";
+import { Server } from "socket.io";
+import { SocketServer } from "./interfaces/socket";
+
+const corsOptions: CorsOptions = { origin: "*" };
 
 (async () => {
   try {
-    await createConnection();
+    await dataSource.initialize();
     const app = express();
-    app.use(cors());
+    app.use(cors(corsOptions));
     app.use(express.json());
     app.use(morgan("dev"));
     app.use(helmet());
-
     app.use("/", require("@/routes").default);
-
     app.use(errorHandler);
-    app.listen(80);
 
-    console.log("Express server has started.");
+    const httpServer = app.listen(80, () =>
+      console.log(
+        `Express server has started on port ${
+          (httpServer.address() as AddressInfo).port
+        }`
+      )
+    );
+
+    const io = <SocketServer>(
+      new Server(httpServer, { cors: corsOptions }).use(socketIoJwtAuth)
+    );
+    io.on("connection", (socket) => {
+      console.log(socket.id);
+    });
+
+    app.set("io", io);
   } catch (error) {
     console.log(error);
   }

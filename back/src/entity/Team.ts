@@ -7,11 +7,9 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Task } from "./Task";
-import { TeamSolvedTasks } from "./TeamSolvedTasks";
 
 @Entity()
 export class Team {
@@ -25,9 +23,6 @@ export class Team {
   @Column({ select: false })
   @IsNotEmpty({ message: "Поле password обязательно" })
   password: string;
-
-  @OneToMany(() => TeamSolvedTasks, (teamSolvedTasks) => teamSolvedTasks.team)
-  public teamSolvedTasks!: TeamSolvedTasks[];
 
   @ManyToMany(() => Task)
   @JoinTable({ name: "team_solved_tasks" })
@@ -44,10 +39,7 @@ export class Team {
   }
 
   @BeforeInsert()
-  @BeforeUpdate()
   private hashPassword() {
-    if (this.password) {
-      this.password = bcrypt.hashSync(this.password, 8);
-    }
+    this.password = bcrypt.hashSync(this.password, 8);
   }
 }

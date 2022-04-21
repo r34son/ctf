@@ -1,19 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { socketMiddleware } from 'common/store/middlewares/socket';
 import auth from 'features/auth/authSlice';
-import timer from 'features/timer/timerSlice';
+import tasks from 'features/tasks/tasksSlice';
 import { timerSSEMiddleware } from 'features/timer/sseMiddleware';
+import timer from 'features/timer/timerSlice';
 
 export const store = configureStore({
   reducer: {
     auth,
     timer,
+    tasks,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActionPaths: ['payload.config', 'payload.request'],
       },
-    }).concat(timerSSEMiddleware),
+    }).concat([socketMiddleware, timerSSEMiddleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

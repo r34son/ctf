@@ -1,12 +1,12 @@
 import { StatusCodes } from "@/consts/statusCodes";
+import { dataSource } from "@/dataSource";
 import { Team } from "@/entity/Team";
 import { validationErrorsToMessages } from "@/utils";
 import { ValidationError } from "class-validator";
 import { Request, Response } from "express";
-import { getRepository } from "typeorm";
 
 class TeamController {
-  private teamRepository = getRepository(Team);
+  private teamRepository = dataSource.getRepository(Team);
 
   /** Team creation method. */
   create = async (request: Request<{}, any, Team>, response: Response) => {
@@ -32,16 +32,18 @@ class TeamController {
     return this.teamRepository.find();
   }
 
-  async one(request: Request) {
-    return this.teamRepository.findOne(request.params.id);
+  async one(request: Request<{ id: number }>) {
+    const { id } = request.params;
+    return this.teamRepository.findOneBy({ id });
   }
 
   async save(request: Request) {
     return this.teamRepository.save(request.body);
   }
 
-  async remove(request: Request) {
-    let teamToRemove = await this.teamRepository.findOne(request.params.id);
+  async remove(request: Request<{ id: number }>) {
+    const { id } = request.params;
+    const teamToRemove = await this.teamRepository.findOneBy({ id });
     await this.teamRepository.remove(teamToRemove);
   }
 }

@@ -1,17 +1,20 @@
 import { StatusCodes } from "@/consts/statusCodes";
+import { dataSource } from "@/dataSource";
 import { Task } from "@/entity/Task";
+import { SocketServer } from "@/interfaces/socket";
 import { validationErrorsToMessages } from "@/utils";
 import { ValidationError } from "class-validator";
-import { Request, Response } from "express";
-import { getRepository } from "typeorm";
+import { Request, RequestHandler, Response } from "express";
+
+type Params = { id: string };
 
 class TaskController {
-  private taskRepository = getRepository(Task);
+  private taskRepository = dataSource.getRepository(Task);
 
   /** Task creation method. */
   create = async (request: Request<{}, any, Task>, response: Response) => {
     try {
-      const { flag, ...task } = await this.taskRepository.save(
+      const { flag, enabled, ...task } = await this.taskRepository.save(
         this.taskRepository.create(request.body)
       );
       response.json(task);
@@ -29,20 +32,48 @@ class TaskController {
     }
   };
 
-  all = async () => this.taskRepository.find();
+  all = async (_request: Request, response: Response) =>
+    response.json(await this.taskRepository.find());
 
-  async one(request: Request) {
-    return this.taskRepository.findOne(request.params.id);
-  }
+  remove: RequestHandler<Params> = async (request, response) => {
+    const taskToRemove = await this.taskRepository.findOneBy({
+      id: +request.params.id,
+    });
+    await this.taskRepository.remove(taskToRemove);
+    response.sendStatus(StatusCodes.OK);
+  };
 
-  async save(request: Request) {
-    return this.taskRepository.save(request.body);
-  }
-
-  async remove(request: Request<{ id: number }>) {
-    let teamToRemove = await this.taskRepository.findOne(request.params.id);
-    await this.taskRepository.remove(teamToRemove);
-  }
+  update: RequestHandler<Params, any, Task> = async (request, response) => {
+    try {
+      const task = await dataSource.manager
+        .createQueryBuilder(Task, "task")
+        .addSelect("task.flag")
+        .addSelect("task.enabled")
+        .where("task.id = :id", request.params)
+        .getOne();
+      const wasEnabled = task.enabled;
+      this.taskRepository.merge(task, request.body);
+      const { flag, enabled, ...result } = await this.taskRepository.save(task);
+      if (!wasEnabled && enabled)
+        (request.app.get("io") as SocketServer).emit(
+          "task:add",
+          result as Task
+        );
+      if (wasEnabled && !enabled)
+        (request.app.get("io") as SocketServer).emit("task:remove", result.id);
+      response.json(result);
+    } catch (errors) {
+      if (
+        Array.isArray(errors) &&
+        errors.every((err) => err instanceof ValidationError)
+      ) {
+        return response
+          .status(StatusCodes.UNPROCESSABLE_ENTITY)
+          .json({ error: validationErrorsToMessages(errors) });
+      }
+      response.status(StatusCodes.BAD_REQUEST).json({ error: errors.message });
+    }
+  };
 }
 
 export default new TaskController();

@@ -1,14 +1,22 @@
-import { LoginPage } from 'features/auth/LoginPage';
-import { Routes as RouterRoutes, Route } from 'react-router-dom';
-import { ProtectedRoute } from 'common/components/ProtectedRoute';
 import { Layout } from 'common/components/Layout';
+import { ProtectedRoute } from 'common/components/ProtectedRoute';
+import { LoginPage } from 'features/auth/LoginPage';
+import { TasksPage } from 'features/tasks/TasksPage';
+import { Route, Routes as RouterRoutes } from 'react-router-dom';
 
 /** Роуты приложения. */
 export const Routes = () => (
   <RouterRoutes>
     <Route element={<Layout />}>
       <Route path="/" element={<div>public</div>} />
-      <Route path="/test" element={<ProtectedRoute>test</ProtectedRoute>} />
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute>
+            <TasksPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/login" element={<LoginPage />} />
     </Route>
   </RouterRoutes>

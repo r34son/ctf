@@ -1,17 +1,24 @@
+import styled from '@emotion/styled';
+import LogoutIcon from '@mui/icons-material/Logout';
 import {
   AppBar,
-  Box,
   Button,
+  Chip,
+  Container,
+  Stack,
   Toolbar,
   Typography,
-  Chip,
-  Stack,
 } from '@mui/material';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { authSelector, logout } from 'features/auth/authSlice';
 import { Timer } from 'features/timer/Timer';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
 
 export const Layout = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +31,7 @@ export const Layout = () => {
   };
 
   return (
-    <Box>
+    <AppContainer>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -32,8 +39,8 @@ export const Layout = () => {
           </Typography>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Timer />
-            <Button component={Link} to="/test">
-              test
+            <Button component={Link} to="/tasks">
+              Tasks
             </Button>
             {auth.isAuthorized ? (
               <>
@@ -50,7 +57,14 @@ export const Layout = () => {
           </Stack>
         </Toolbar>
       </AppBar>
-      <Outlet />
-    </Box>
+      <Container
+        disableGutters
+        fixed
+        maxWidth="xl"
+        sx={{ p: 3, flex: 1, overflowY: 'hidden' }}
+      >
+        <Outlet />
+      </Container>
+    </AppContainer>
   );
 };

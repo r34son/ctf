@@ -13,10 +13,8 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { TeamSolvedTasks } from "./TeamSolvedTasks";
 
 @Entity()
 export class Task {
@@ -41,7 +39,7 @@ export class Task {
   @IsPositive({ message: "Поле points должно быть целым положительным числом" })
   points: number;
 
-  @Column({ default: false })
+  @Column({ default: false, select: false })
   @IsOptional()
   @IsBoolean({ message: "Поле enabled должно быть boolean" })
   enabled: boolean;
@@ -49,9 +47,6 @@ export class Task {
   @Column({ select: false })
   @IsNotEmpty({ message: "Поле flag обязательно" })
   flag: string;
-
-  @OneToMany(() => TeamSolvedTasks, (teamSolvedTasks) => teamSolvedTasks.task)
-  public teamSolvedTasks!: TeamSolvedTasks[];
 
   resolve(flag: string) {
     return bcrypt.compareSync(flag, this.flag);
@@ -64,10 +59,7 @@ export class Task {
   }
 
   @BeforeInsert()
-  @BeforeUpdate()
   private hashFlag() {
-    if (this.flag) {
-      this.flag = bcrypt.hashSync(this.flag, 8);
-    }
+    this.flag = bcrypt.hashSync(this.flag, 8);
   }
 }

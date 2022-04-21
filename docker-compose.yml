@@ -26,6 +26,7 @@ services:
       context: ./back
     depends_on:
       - postgres
+    restart: unless-stopped
     ports:
       - "3002:80"
     volumes:

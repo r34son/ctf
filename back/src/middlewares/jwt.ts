@@ -1,6 +1,7 @@
 import { StatusCodes } from "@/consts/statusCodes";
-import { Request, Response, NextFunction } from "express";
+import { AppSocket } from "@/interfaces/socket";
 import { TokenService } from "@/services/jwt";
+import { NextFunction, Request, Response } from "express";
 
 /** Middleware to check whether user is authenticated. */
 export const jwtAuth = async (
@@ -46,4 +47,19 @@ export const isAdmin = (
 ) => {
   if (!response.locals.id) next();
   else response.sendStatus(StatusCodes.FORBIDDEN);
+};
+
+/** Middleware to check whether socket is authenticated. */
+export const socketIoJwtAuth = (socket: AppSocket, next) => {
+  const { token } = socket.handshake.auth;
+  if (token) {
+    try {
+      socket.data = TokenService.verifyAccessToken(token);
+      next();
+    } catch (error) {
+      next(new Error(error.name || "Authentication error"));
+    }
+  } else {
+    next(new Error("Authentication error"));
+  }
 };

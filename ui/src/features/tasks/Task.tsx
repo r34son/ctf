@@ -4,7 +4,7 @@ import {
   CardActions,
   CardContent,
   Chip,
-  Typography,
+  Typography
 } from '@mui/material';
 import { Task as ITask } from 'common/interfaces';
 // import { useColorScheme, getInitColorSchemeScript } from '@mui/material/styles';
@@ -14,7 +14,7 @@ interface TaskProps {
 }
 
 export const Task = ({ task }: TaskProps) => (
-  <Card sx={{ overflow: 'auto' }}>
+  <Card sx={{ overflow: 'initial' }}>
     <CardActionArea>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">

@@ -33,7 +33,7 @@ class TaskController {
   };
 
   all = async (_request: Request, response: Response) =>
-    response.json(await this.taskRepository.find());
+    response.json(await this.taskRepository.find({where: {enabled: true}}));
 
   remove: RequestHandler<Params> = async (request, response) => {
     const taskToRemove = await this.taskRepository.findOneBy({

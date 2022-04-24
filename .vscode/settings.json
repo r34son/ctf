@@ -1,3 +1,8 @@
 {
-  "eslint.workingDirectories": ["ui", "admin-ui", "back"]
+  "eslint.workingDirectories": ["ui", "admin-ui", "back"],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
 }

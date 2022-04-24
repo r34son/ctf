@@ -20,7 +20,7 @@ enum Forms {
 export const AdminPage = () => {
   const [expandedForm, setExpandedForm] = useState<Forms>(Forms.TEAM);
 
-  const makeOnChange = (panel: Forms) => () => setExpandedForm(panel);
+  const makeOnChange = (form: Forms) => () => setExpandedForm(form);
 
   return (
     <Container>

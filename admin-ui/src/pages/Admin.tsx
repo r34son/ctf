@@ -7,6 +7,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import { TasksControl } from 'components/controls/TasksControl';
 import { TimerControl } from 'components/controls/TimerControl';
 import { CreateTeamForm } from 'components/forms/CreateTeamForm';
 import { UpsertTaskForm } from 'components/forms/UpsertTaskForm';
@@ -51,6 +52,9 @@ export const AdminPage = () => {
               <UpsertTaskForm />
             </AccordionDetails>
           </Accordion>
+        </Grid>
+        <Grid item xs={8}>
+          <TasksControl />
         </Grid>
       </Grid>
     </Container>

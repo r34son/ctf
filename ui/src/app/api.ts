@@ -1,15 +1,17 @@
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import { TokenService } from 'features/auth/tokenService';
 
-const api = axios.create({ baseURL: process.env.REACT_APP_API_URL });
+const accessToken = TokenService.getAccessToken();
 
-api.interceptors.request.use((config) => {
-  const accessToken = TokenService.getAccessToken();
-  if (accessToken)
-    (
-      config.headers as AxiosRequestHeaders
-    ).Authorization = `Bearer ${accessToken}`;
-  return config;
-}, Promise.reject);
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+  ...(accessToken
+    ? {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    : {}),
+});
+
+api.interceptors.request.use((config) => config, Promise.reject);
 
 export { api };

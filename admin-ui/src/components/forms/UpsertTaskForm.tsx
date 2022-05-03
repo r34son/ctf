@@ -1,6 +1,7 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MenuItem, Stack, TextField } from '@mui/material';
 import { AxiosError } from 'axios';
+import { DraftEditor } from 'components/Editor';
 import { CATEGORIES } from 'consts';
 import { Task } from 'interfaces';
 import { useSnackbar } from 'notistack';
@@ -102,22 +103,12 @@ export const UpsertTaskForm = () => {
             )}
           />
         </Stack>
-        {/* TODO: добавить markdown */}
         <Controller
           control={control}
           name="description"
           rules={{ required: true }}
-          defaultValue=""
-          render={({ field: { ref, ...field }, fieldState: { invalid } }) => (
-            <TextField
-              fullWidth
-              multiline
-              minRows={2}
-              label="Description"
-              error={invalid}
-              {...field}
-              inputRef={ref}
-            />
+          render={({ field: { ref, ...field } }) => (
+            <DraftEditor placeholder="Описание" {...field} />
           )}
         />
         <Controller

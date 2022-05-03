@@ -9,9 +9,11 @@ export interface TeamCredentials {
 }
 
 export interface Task {
+  id: number;
   title: string;
   category: string;
   description: string;
+  enabled: boolean;
   points: number;
   flag: string;
 }

@@ -32,8 +32,19 @@ class TaskController {
     }
   };
 
-  all = async (_request: Request, response: Response) =>
-    response.json(await this.taskRepository.find({where: {enabled: true}}));
+  all = async (_request: Request, response: Response) => {
+    if (!response.locals.id) {
+      return response.json(
+        await dataSource.manager
+          .createQueryBuilder(Task, "task")
+          .addSelect("task.enabled")
+          .getMany()
+      );
+    } else
+      return response.json(
+        await this.taskRepository.find({ where: { enabled: true } })
+      );
+  };
 
   remove: RequestHandler<Params> = async (request, response) => {
     const taskToRemove = await this.taskRepository.findOneBy({

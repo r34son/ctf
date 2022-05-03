@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Card, CardContent, Stack, Typography } from '@mui/material';
 import { useAppSelector } from 'app/hooks';
+import _ from 'lodash';
 import groupBy from 'lodash/groupBy';
 import { useMemo } from 'react';
 import { Task } from './Task';
@@ -37,7 +38,7 @@ export const Tasks = () => {
                 {category}
               </Typography>
               <Stack spacing={2} sx={{ flex: 1, overflowY: 'auto' }}>
-                {tasks.map((task) => (
+                {_.sortBy(tasks, 'points').map((task) => (
                   <Task key={task.id} task={task} />
                 ))}
               </Stack>

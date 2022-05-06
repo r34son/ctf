@@ -1,18 +1,11 @@
 import styled from '@emotion/styled';
-import LogoutIcon from '@mui/icons-material/Logout';
-import {
-  AppBar,
-  Button,
-  Chip,
-  Container,
-  Stack,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { authSelector, logout } from 'features/auth/authSlice';
-import { Timer } from 'features/timer/Timer';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Container } from '@mui/material';
+import { useAppSelector } from 'app/hooks';
+import { authSelector } from 'features/auth/authSlice';
+import { Outlet } from 'react-router-dom';
+import { AppBar } from './AppBar';
+import { Breadcrumbs } from './Breadcrumbs';
+import { MenuDrawer } from './MenuDrawer';
 
 const AppContainer = styled.div`
   display: flex;
@@ -20,51 +13,42 @@ const AppContainer = styled.div`
   height: 100vh;
 `;
 
-export const Layout = () => {
-  const dispatch = useAppDispatch();
-  const auth = useAppSelector(authSelector);
-  const navigate = useNavigate();
+const MainWrapper = styled.div`
+  display: flex;
+  flex: 1;
+`;
 
-  const onLogoutClick = () => {
-    dispatch(logout());
-    navigate('/', { replace: true });
-  };
+const Content = styled.div`
+  margin-top: 16px;
+  flex: 1;
+`;
+
+export const Layout = () => {
+  const auth = useAppSelector(authSelector);
 
   return (
     <AppContainer>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            CTF
-          </Typography>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Timer />
-            <Button component={Link} to="/tasks">
-              Tasks
-            </Button>
-            {auth.isAuthorized ? (
-              <>
-                <Chip label={auth.team.name} variant="outlined" />
-                <Button onClick={onLogoutClick} endIcon={<LogoutIcon />}>
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <Button component={Link} to="/login">
-                Login
-              </Button>
-            )}
-          </Stack>
-        </Toolbar>
-      </AppBar>
-      <Container
-        disableGutters
-        fixed
-        maxWidth="xl"
-        sx={{ p: 3, flex: 1, overflowY: 'hidden' }}
-      >
-        <Outlet />
-      </Container>
+      <AppBar />
+      <MainWrapper>
+        {auth.isAuthorized && <MenuDrawer />}
+        <Container
+          disableGutters
+          fixed
+          maxWidth="xl"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            p: 3,
+            flex: 1,
+            overflowY: 'hidden',
+          }}
+        >
+          {auth.isAuthorized && <Breadcrumbs />}
+          <Content>
+            <Outlet />
+          </Content>
+        </Container>
+      </MainWrapper>
     </AppContainer>
   );
 };

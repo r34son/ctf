@@ -9,6 +9,7 @@ export const Routes = () => (
   <RouterRoutes>
     <Route element={<Layout />}>
       <Route path="/" element={<div>public</div>} />
+      <Route path="/rating" element={<div>rating</div>} />
       <Route
         path="/tasks"
         element={

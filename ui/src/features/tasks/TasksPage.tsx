@@ -15,7 +15,6 @@ export const TasksPage = () => {
     };
   }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
-
-  return <Tasks />;
+  if (!loading) return <Tasks />;
+  return null;
 };

@@ -72,6 +72,7 @@ export const DraftEditor = ({
         padding: 14,
       }}
       {...editorProps}
+      // TODO: add links
       toolbar={{
         options: [
           'inline',

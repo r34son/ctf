@@ -30,7 +30,13 @@ export const Task = ({ task }: TaskProps) => (
         />
       </CardContent>
       <CardActions>
-        <Chip size="small" label={task.points} sx={{ ml: 'auto' }} />
+        <Chip
+          size="small"
+          variant="outlined"
+          color="primary"
+          label={task.points}
+          sx={{ ml: 'auto' }}
+        />
       </CardActions>
     </CardActionArea>
   </Card>

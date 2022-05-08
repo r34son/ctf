@@ -21,11 +21,11 @@ export const Breadcrumbs = () => {
 
         return last ? (
           <Typography color="text.primary" key={to}>
-            {ROUTES_CONFIG[to].name}
+            {ROUTES_CONFIG[to]?.name}
           </Typography>
         ) : (
           <LinkRouter underline="hover" color="inherit" to={to} key={to}>
-            {ROUTES_CONFIG[to].name}
+            {ROUTES_CONFIG[to]?.name}
           </LinkRouter>
         );
       })}

@@ -79,7 +79,7 @@ export const MenuDrawer = () => {
       </DrawerHeader>
       <List>
         {Object.entries(ROUTES_CONFIG).map(([to, { name, icon: Icon }]) => (
-          <Tooltip placement="right" title={name}>
+          <Tooltip placement="right" title={name} key={to}>
             <ListItemButton
               key={to}
               sx={{ px: 2.5 }}

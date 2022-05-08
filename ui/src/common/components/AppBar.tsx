@@ -52,15 +52,12 @@ export const AppBar = () => {
   return (
     <StyledAppBar position="static" open={isMenuOpened}>
       <Toolbar>
-        {auth.isAuthorized && (
+        {auth.isAuthorized && !isMenuOpened && (
           <IconButton
             color="inherit"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{
-              marginRight: 5,
-              ...(isMenuOpened && { display: 'none' }),
-            }}
+            sx={{ mr: 5 }}
           >
             <MenuIcon />
           </IconButton>

@@ -10,7 +10,13 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import NumberFormat from 'react-number-format';
 import { create } from 'services/api/task';
 
-export const UpsertTaskForm = () => {
+interface UpsertTaskFormProps {
+  onSubmit: () => void;
+}
+
+export const UpsertTaskForm = ({
+  onSubmit: onSubmitProp,
+}: UpsertTaskFormProps) => {
   const {
     handleSubmit,
     control,
@@ -25,6 +31,7 @@ export const UpsertTaskForm = () => {
       await create(data);
       enqueueSnackbar(`Task "${data.title}" created.`, { variant: 'success' });
       reset();
+      onSubmitProp();
     } catch (error) {
       const axiosError = error as AxiosError<{
         error: Record<keyof Task, string>;
@@ -106,6 +113,7 @@ export const UpsertTaskForm = () => {
         <Controller
           control={control}
           name="description"
+          defaultValue=""
           rules={{ required: true }}
           render={({ field: { ref, ...field } }) => (
             <DraftEditor placeholder="Описание" {...field} />

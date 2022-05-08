@@ -11,7 +11,9 @@ import { TasksControl } from 'components/controls/TasksControl';
 import { TimerControl } from 'components/controls/TimerControl';
 import { CreateTeamForm } from 'components/forms/CreateTeamForm';
 import { UpsertTaskForm } from 'components/forms/UpsertTaskForm';
-import { useState } from 'react';
+import { Task } from 'interfaces';
+import { useCallback, useEffect, useState } from 'react';
+import { getAll } from 'services/api/task';
 
 enum Forms {
   TEAM,
@@ -19,7 +21,17 @@ enum Forms {
 }
 
 export const AdminPage = () => {
-  const [expandedForm, setExpandedForm] = useState<Forms>(Forms.TEAM);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  const fetchTasks = useCallback(async () => {
+    setTasks(await getAll());
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  const [expandedForm, setExpandedForm] = useState<Forms>(Forms.TASK);
 
   const makeOnChange = (form: Forms) => () => setExpandedForm(form);
 
@@ -49,12 +61,12 @@ export const AdminPage = () => {
               <Typography>Create task</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <UpsertTaskForm />
+              <UpsertTaskForm onSubmit={fetchTasks} />
             </AccordionDetails>
           </Accordion>
         </Grid>
         <Grid item xs={8}>
-          <TasksControl />
+          <TasksControl tasks={tasks} />
         </Grid>
       </Grid>
     </Container>

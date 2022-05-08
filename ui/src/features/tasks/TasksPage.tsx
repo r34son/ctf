@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { useEffect } from 'react';
+import { TaskDialog } from './TaskDialog';
 import { Tasks } from './Tasks';
 import { getTasks, tasksSelector } from './tasksSlice';
 
@@ -15,6 +16,12 @@ export const TasksPage = () => {
     };
   }, [dispatch]);
 
-  if (!loading) return <Tasks />;
+  if (!loading)
+    return (
+      <>
+        <Tasks />
+        <TaskDialog />
+      </>
+    );
   return null;
 };

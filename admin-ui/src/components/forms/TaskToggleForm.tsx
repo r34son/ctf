@@ -30,13 +30,21 @@ export const TaskToggleForm = ({ task }: ITaskToggleFormProps) => {
       disabled={loading}
       control={<Switch checked={checked} onChange={handleChange} />}
       label={
-        <Box display="flex" justifyContent="space-between" flex={1}>
-          <Typography>{task.title}</Typography>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          flex={1}
+          overflow="hidden"
+        >
+          <Typography title={task.title} noWrap>
+            {task.title}
+          </Typography>
           <Chip
             label={`${task.category} ${task.points}`}
             variant="outlined"
             color="primary"
             size="small"
+            sx={{ ml: 1 }}
           />
         </Box>
       }

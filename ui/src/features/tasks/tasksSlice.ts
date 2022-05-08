@@ -6,11 +6,13 @@ import { Task } from 'common/interfaces';
 type TasksState = {
   loading: boolean;
   data: Task[];
+  openedTaskId: Task['id'] | null;
 };
 
 const initialState: TasksState = {
   loading: false,
   data: [],
+  openedTaskId: null,
 };
 
 export const getTasks = createAsyncThunk('tasks/get', async () =>
@@ -24,11 +26,17 @@ export const tasksSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.data.push(action.payload);
     },
-    removeTask: (state, action: PayloadAction<number>) => {
+    removeTask: (state, action: PayloadAction<Task['id']>) => {
       state.data.splice(
         state.data.findIndex((task) => task.id === action.payload),
         1,
       );
+    },
+    openTask: (state, action: PayloadAction<Task['id']>) => {
+      state.openedTaskId = action.payload;
+    },
+    closeTask: (state) => {
+      state.openedTaskId = null;
     },
   },
   extraReducers: (builder) => {
@@ -45,8 +53,10 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const { addTask, removeTask } = tasksSlice.actions;
+export const { addTask, removeTask, openTask, closeTask } = tasksSlice.actions;
 
 export const tasksSelector = (s: RootState) => s.tasks;
+export const openedTaskSelector = (s: RootState) =>
+  s.tasks.data.find((t) => t.id === s.tasks.openedTaskId);
 
 export default tasksSlice.reducer;

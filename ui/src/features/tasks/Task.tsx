@@ -6,38 +6,39 @@ import {
   Chip,
   Typography,
 } from '@mui/material';
+import { useAppDispatch } from 'app/hooks';
 import { Task as ITask } from 'common/interfaces';
-import draftToHtml from 'draftjs-to-html';
+import { openTask } from './tasksSlice';
 // import { useColorScheme, getInitColorSchemeScript } from '@mui/material/styles';
 
 interface TaskProps {
   task: ITask;
 }
 
-export const Task = ({ task }: TaskProps) => (
-  <Card sx={{ overflow: 'initial' }}>
-    <CardActionArea>
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {task.title}
-        </Typography>
-        <div
-          style={{ fontSize: 16 }}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: draftToHtml(JSON.parse(task.description)),
-          }}
-        />
-      </CardContent>
-      <CardActions>
-        <Chip
-          size="small"
-          variant="outlined"
-          color="primary"
-          label={task.points}
-          sx={{ ml: 'auto' }}
-        />
-      </CardActions>
-    </CardActionArea>
-  </Card>
-);
+export const Task = ({ task }: TaskProps) => {
+  const dispatch = useAppDispatch();
+  const onTaskClick = () => {
+    dispatch(openTask(task.id));
+  };
+
+  return (
+    <Card sx={{ overflow: 'initial' }} onClick={onTaskClick}>
+      <CardActionArea>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div" noWrap>
+            {task.title}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Chip
+            size="small"
+            variant="outlined"
+            color="primary"
+            label={task.points}
+            sx={{ ml: 'auto' }}
+          />
+        </CardActions>
+      </CardActionArea>
+    </Card>
+  );
+};

@@ -47,10 +47,10 @@ class TaskController {
   };
 
   remove: RequestHandler<Params> = async (request, response) => {
-    const taskToRemove = await this.taskRepository.findOneBy({
-      id: +request.params.id,
-    });
+    const id = +request.params.id;
+    const taskToRemove = await this.taskRepository.findOneBy({ id });
     await this.taskRepository.remove(taskToRemove);
+    (request.app.get("io") as SocketServer).emit("task:remove", id);
     response.sendStatus(StatusCodes.OK);
   };
 

@@ -1,3 +1,4 @@
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   Box,
@@ -13,19 +14,21 @@ import {
   Typography,
 } from '@mui/material';
 import { Task } from 'interfaces';
+import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import { edit } from 'services/api/task';
+import { edit, remove } from 'services/api/task';
 import { UpsertTaskForm } from './UpsertTaskForm';
 
 interface ITaskToggleFormProps {
   task: Task;
-  onEdit: () => void;
+  onUpdate: () => void;
 }
 
-export const TaskToggleForm = ({ task, onEdit }: ITaskToggleFormProps) => {
+export const TaskToggleForm = ({ task, onUpdate }: ITaskToggleFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [checked, setChecked] = useState(task.enabled);
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = async () => {
     try {
@@ -42,8 +45,14 @@ export const TaskToggleForm = ({ task, onEdit }: ITaskToggleFormProps) => {
   const onEditClick = () => setIsEditing(true);
   const onEditClose = () => setIsEditing(false);
   const onSubmit = () => {
-    onEdit();
+    onUpdate();
     onEditClose();
+  };
+
+  const onDeleteClick = async () => {
+    await remove(task.id);
+    enqueueSnackbar('Задание успешно удалено.', { variant: 'success' });
+    onUpdate();
   };
 
   return (
@@ -65,7 +74,7 @@ export const TaskToggleForm = ({ task, onEdit }: ITaskToggleFormProps) => {
           </Typography>
         }
       />
-      <Box display="flex" alignItems="center">
+      <Box display="flex" alignItems="center" gap={0.5}>
         <Chip
           label={`${task.category} ${task.points}`}
           variant="outlined"
@@ -92,6 +101,9 @@ export const TaskToggleForm = ({ task, onEdit }: ITaskToggleFormProps) => {
             </Button>
           </DialogActions>
         </Dialog>
+        <IconButton onClick={onDeleteClick}>
+          <DeleteIcon />
+        </IconButton>
       </Box>
     </Box>
   );

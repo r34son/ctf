@@ -5,7 +5,7 @@ import {
   ServerToClientEvents,
 } from 'common/interfaces/socket';
 import { TokenService } from 'features/auth/tokenService';
-import { addTask, removeTask } from 'features/tasks/tasksSlice';
+import { addTask, removeTask, updateTask } from 'features/tasks/tasksSlice';
 import { io, Socket } from 'socket.io-client';
 
 export const socketMiddleware: Middleware = ({ dispatch }) => {
@@ -24,6 +24,7 @@ export const socketMiddleware: Middleware = ({ dispatch }) => {
 
   socket.on('task:add', (task) => dispatch(addTask(task)));
   socket.on('task:remove', (taskId) => dispatch(removeTask(taskId)));
+  socket.on('task:update', (task) => dispatch(updateTask(task)));
 
   return (next) => (action) => next(action);
 };

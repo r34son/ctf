@@ -1,4 +1,4 @@
-import { EditorState } from 'draft-js';
+import { convertFromRaw, EditorState } from 'draft-js';
 import { useEffect, useState } from 'react';
 import { Editor, EditorProps } from 'react-draft-wysiwyg';
 import { Inline } from './components/Inline';
@@ -17,7 +17,7 @@ export const DraftEditor = ({
 }: DraftEditorProps) => {
   const [editorState, setEditorState] = useState(() =>
     value
-      ? EditorState.createWithContent(JSON.parse(value))
+      ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)))
       : EditorState.createEmpty(),
   );
 

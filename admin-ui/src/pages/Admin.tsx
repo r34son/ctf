@@ -66,7 +66,7 @@ export const AdminPage = () => {
           </Accordion>
         </Grid>
         <Grid item xs={8}>
-          <TasksControl tasks={tasks} />
+          <TasksControl tasks={tasks} onEdit={fetchTasks} />
         </Grid>
       </Grid>
     </Container>

@@ -6,6 +6,7 @@ import { Server, Socket } from "socket.io";
 export interface ServerToClientEvents {
   ["task:add"]: (task: Task) => void;
   ["task:remove"]: (id: Task["id"]) => void;
+  ["task:update"]: (task: Task) => void;
 }
 
 export interface ClientToServerEvents {}

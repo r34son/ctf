@@ -19,12 +19,20 @@ export const getTasks = createAsyncThunk('tasks/get', async () =>
   api.get<Task[]>('/task'),
 );
 
+// TODO: use EntityAdapter https://redux-toolkit.js.org/api/createEntityAdapter
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
     addTask: (state, action: PayloadAction<Task>) => {
       state.data.push(action.payload);
+    },
+    updateTask: (state, action: PayloadAction<Task>) => {
+      const taskIndex = state.data.findIndex(
+        (task) => task.id === action.payload.id,
+      );
+      if (taskIndex)
+        state.data[taskIndex] = { ...state.data[taskIndex], ...action.payload };
     },
     removeTask: (state, action: PayloadAction<Task['id']>) => {
       state.data.splice(
@@ -53,7 +61,8 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const { addTask, removeTask, openTask, closeTask } = tasksSlice.actions;
+export const { addTask, updateTask, removeTask, openTask, closeTask } =
+  tasksSlice.actions;
 
 export const tasksSelector = (s: RootState) => s.tasks;
 export const openedTaskSelector = (s: RootState) =>

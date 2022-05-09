@@ -6,15 +6,24 @@ import { CATEGORIES } from 'consts';
 import { Task } from 'interfaces';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  DefaultValues,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
 import NumberFormat from 'react-number-format';
-import { create } from 'services/api/task';
+import { create, edit } from 'services/api/task';
 
 interface UpsertTaskFormProps {
+  id?: string;
+  defaultValues?: DefaultValues<Task>;
   onSubmit: () => void;
 }
 
 export const UpsertTaskForm = ({
+  id,
+  defaultValues,
   onSubmit: onSubmitProp,
 }: UpsertTaskFormProps) => {
   const {
@@ -23,13 +32,22 @@ export const UpsertTaskForm = ({
     reset,
     setError,
     formState: { isSubmitting },
-  } = useForm<Task>();
+  } = useForm<Task>({ defaultValues });
   const { enqueueSnackbar } = useSnackbar();
+
+  const isEditing = Boolean(defaultValues?.id);
 
   const onSubmit: SubmitHandler<Task> = async (data) => {
     try {
-      await create(data);
-      enqueueSnackbar(`Task "${data.title}" created.`, { variant: 'success' });
+      await (isEditing
+        ? edit(defaultValues?.id as Task['id'], data)
+        : create(data));
+      enqueueSnackbar(
+        `Задание "${data.title}" успешно ${
+          isEditing ? 'отредактировано' : 'создано'
+        }.`,
+        { variant: 'success' },
+      );
       reset();
       onSubmitProp();
     } catch (error) {
@@ -45,7 +63,7 @@ export const UpsertTaskForm = ({
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+    <form id={id} autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
         <Controller
           control={control}
@@ -122,21 +140,30 @@ export const UpsertTaskForm = ({
         <Controller
           control={control}
           name="flag"
-          rules={{ required: true }}
-          defaultValue=""
-          render={({ field: { ref, ...field }, fieldState: { invalid } }) => (
+          rules={{ required: !isEditing }}
+          render={({
+            field: { ref, value = '', ...field },
+            fieldState: { invalid },
+          }) => (
             <TextField
               fullWidth
               label="Flag"
               error={invalid}
+              value={value}
               {...field}
               inputRef={ref}
             />
           )}
         />
-        <LoadingButton loading={isSubmitting} variant="outlined" type="submit">
-          Create
-        </LoadingButton>
+        {!isEditing && (
+          <LoadingButton
+            loading={isSubmitting}
+            variant="outlined"
+            type="submit"
+          >
+            Create
+          </LoadingButton>
+        )}
       </Stack>
     </form>
   );

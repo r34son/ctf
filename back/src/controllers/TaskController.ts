@@ -65,13 +65,19 @@ class TaskController {
       const wasEnabled = task.enabled;
       this.taskRepository.merge(task, request.body);
       const { flag, enabled, ...result } = await this.taskRepository.save(task);
-      if (!wasEnabled && enabled)
+      if (!wasEnabled && enabled) {
         (request.app.get("io") as SocketServer).emit(
           "task:add",
           result as Task
         );
-      if (wasEnabled && !enabled)
+      } else if (wasEnabled && !enabled) {
         (request.app.get("io") as SocketServer).emit("task:remove", result.id);
+      } else {
+        (request.app.get("io") as SocketServer).emit(
+          "task:update",
+          result as Task
+        );
+      }
       response.json(result);
     } catch (errors) {
       if (

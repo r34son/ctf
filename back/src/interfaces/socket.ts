@@ -1,4 +1,5 @@
 import { Task } from "@/entity/Task";
+import { TeamSolvedTasks } from "@/entity/TeamSolvedTasks";
 import { TokenData } from "@/services/jwt";
 import { Server, Socket } from "socket.io";
 
@@ -7,6 +8,7 @@ export interface ServerToClientEvents {
   ["task:add"]: (task: Task) => void;
   ["task:remove"]: (id: Task["id"]) => void;
   ["task:update"]: (task: Task) => void;
+  ["task:solve"]: (solvedTask: TeamSolvedTasks) => void;
 }
 
 export interface ClientToServerEvents {}

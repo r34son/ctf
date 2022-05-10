@@ -1,15 +1,19 @@
 import { StatusCodes } from "@/consts/statusCodes";
 import { dataSource } from "@/dataSource";
 import { Task } from "@/entity/Task";
+import { TeamSolvedTasks } from "@/entity/TeamSolvedTasks";
 import { SocketServer } from "@/interfaces/socket";
 import { validationErrorsToMessages } from "@/utils";
+import bcrypt from "bcrypt";
 import { ValidationError } from "class-validator";
 import { Request, RequestHandler, Response } from "express";
 
 type Params = { id: string };
+type SolveBody = { taskId: string, flag: string };
 
 class TaskController {
   private taskRepository = dataSource.getRepository(Task);
+  private solvedTasksRepository = dataSource.getRepository(TeamSolvedTasks)
 
   /** Task creation method. */
   create = async (request: Request<{}, any, Task>, response: Response) => {
@@ -91,6 +95,83 @@ class TaskController {
       response.status(StatusCodes.BAD_REQUEST).json({ error: errors.message });
     }
   };
+
+  solve: RequestHandler<any, any, SolveBody> = async (request, response) => {
+    const { taskId, flag } = request.body;
+    const task = await dataSource.manager
+      .createQueryBuilder(Task, "task")
+      .addSelect("task.flag")
+      .where({ id: Number(taskId) })
+      .getOne()
+
+    if (!task) {
+      return response
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Task not found" });
+    }
+
+    const solved = await this.solvedTasksRepository.findOne({ where: {
+      taskId: Number(taskId),
+      teamId: Number(response.locals.id),
+    }})
+
+    if (solved) {
+      return response
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Task already solved" })
+    }
+
+    const isCorrect = await bcrypt.compare(flag, task.flag);
+
+    if (!isCorrect) {
+      return response
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Incorrect flag" })
+    }
+
+    const solvedTask = await this.solvedTasksRepository.save(
+      this.solvedTasksRepository.create({
+        teamId: response.locals.id,
+        taskId: Number(taskId),
+      })
+    );
+
+    (request.app.get("io") as SocketServer).emit(
+      "task:solve",
+      solvedTask,
+    );
+
+    return response
+      .status(StatusCodes.OK)
+      .json({ message: "Flag accepted" })
+  };
+
+  stats: RequestHandler<any, any, any> = async (_, response) => {
+    const solvedTasks = await this.solvedTasksRepository.find({ relations: ['team', 'task'] })
+    const stats = {};
+
+    for (const solvedTask of solvedTasks) {
+      const {
+        task: { title, points },
+        team: { id, name },
+        createdAt,
+      } = solvedTask;
+
+      if (!stats[name]) stats[name] = { id, totalPoints: 0, graph: [] };
+
+      stats[name].totalPoints += points;
+      stats[name].graph.push({
+        title,
+        points,
+        value: stats[name].totalPoints,
+        time: createdAt,
+      });
+    }
+
+    return response
+      .status(StatusCodes.OK)
+      .json(Object.keys(stats).map(name => ({ name, ...stats[name] })))
+  }
 }
 
 export default new TaskController();

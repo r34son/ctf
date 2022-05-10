@@ -1,11 +1,11 @@
 import { StatusCodes } from "@/consts/statusCodes";
+import { dataSource } from "@/dataSource";
 import { Team } from "@/entity/Team";
-import { getRepository } from "typeorm";
-import { Request, Response } from "express";
 import { TokenService } from "@/services/jwt";
+import { Request, Response } from "express";
 
 class AuthController {
-  private teamRepository = getRepository(Team);
+  private teamRepository = dataSource.getRepository(Team);
 
   /** Login method. */
   login = async (request: Request<{}, any, Team>, response: Response) => {

@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from 'app/store';
-import { Team } from 'common/interfaces';
 import { api } from 'app/api';
+import { RootState } from 'app/store';
 import { AxiosError } from 'axios';
+import { Team } from 'common/interfaces';
 import { TokenService } from './tokenService';
-import { LoginData, LoginResponse, LoginErrorResponse } from './types';
+import { LoginData, LoginErrorResponse, LoginResponse } from './types';
 
 type AuthState =
   | {
@@ -45,6 +45,7 @@ export const authSlice = createSlice({
     builder.addCase(login.fulfilled, (_state, { payload }) => {
       const { team, accessToken } = payload;
       TokenService.setAccessToken(accessToken);
+      api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
       return { isAuthorized: true, team };
     });
   },

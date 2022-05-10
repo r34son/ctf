@@ -1,12 +1,12 @@
+import bcrypt from "bcrypt";
 import { IsNotEmpty, validateOrReject } from "class-validator";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
   BeforeInsert,
   BeforeUpdate,
+  Column,
+  Entity, OneToMany, PrimaryGeneratedColumn
 } from "typeorm";
-import bcrypt from "bcrypt";
+import { TeamSolvedTasks } from "./TeamSolvedTasks";
 
 @Entity()
 export class Team {
@@ -20,6 +20,9 @@ export class Team {
   @Column({ select: false })
   @IsNotEmpty({ message: "Поле password обязательно" })
   password: string;
+
+  @OneToMany(() => TeamSolvedTasks, teamSolvedTasks => teamSolvedTasks.team)
+  public solved!: TeamSolvedTasks[];
 
   auth(password: string) {
     return bcrypt.compareSync(password, this.password);

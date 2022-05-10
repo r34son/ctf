@@ -1,0 +1,42 @@
+import { Button, InputAdornment, TextField } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { ChangeEvent, useState } from 'react';
+
+export const FlagForm = () => {
+  const [flag, setFlag] = useState('');
+  const [error, setError] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFlag(e.target.value);
+    setError(false);
+  };
+
+  const onSubmit = async () => {
+    try {
+      await Promise.resolve();
+      enqueueSnackbar('Флаг принят!', { variant: 'success' });
+    } catch {
+      setError(true);
+    }
+  };
+
+  return (
+    <TextField
+      fullWidth
+      placeholder="Флаг"
+      value={flag}
+      onChange={onChange}
+      error={error}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <Button variant="contained" disabled={!flag} onClick={onSubmit}>
+              Отправить
+            </Button>
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
+};

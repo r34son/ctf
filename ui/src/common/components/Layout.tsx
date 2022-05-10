@@ -1,56 +1,54 @@
-import {
-  AppBar,
-  Box,
-  Button,
-  Toolbar,
-  Typography,
-  Chip,
-  Stack,
-} from '@mui/material';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { authSelector, logout } from 'features/auth/authSlice';
-import { Timer } from 'features/timer/Timer';
-import LogoutIcon from '@mui/icons-material/Logout';
+import styled from '@emotion/styled';
+import { Container } from '@mui/material';
+import { useAppSelector } from 'app/hooks';
+import { authSelector } from 'features/auth/authSlice';
+import { Outlet } from 'react-router-dom';
+import { AppBar } from './AppBar';
+import { Breadcrumbs } from './Breadcrumbs';
+import { MenuDrawer } from './MenuDrawer';
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const MainWrapper = styled.div`
+  display: flex;
+  flex: 1;
+`;
+
+const Content = styled.div`
+  margin-top: 16px;
+  flex: 1;
+`;
 
 export const Layout = () => {
-  const dispatch = useAppDispatch();
   const auth = useAppSelector(authSelector);
-  const navigate = useNavigate();
-
-  const onLogoutClick = () => {
-    dispatch(logout());
-    navigate('/', { replace: true });
-  };
 
   return (
-    <Box>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            CTF
-          </Typography>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Timer />
-            <Button component={Link} to="/test">
-              test
-            </Button>
-            {auth.isAuthorized ? (
-              <>
-                <Chip label={auth.team.name} variant="outlined" />
-                <Button onClick={onLogoutClick} endIcon={<LogoutIcon />}>
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <Button component={Link} to="/login">
-                Login
-              </Button>
-            )}
-          </Stack>
-        </Toolbar>
-      </AppBar>
-      <Outlet />
-    </Box>
+    <AppContainer>
+      <AppBar />
+      <MainWrapper>
+        {auth.isAuthorized && <MenuDrawer />}
+        <Container
+          disableGutters
+          fixed
+          maxWidth="xl"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            p: 3,
+            flex: 1,
+            overflowY: 'hidden',
+          }}
+        >
+          {auth.isAuthorized && <Breadcrumbs />}
+          <Content>
+            <Outlet />
+          </Content>
+        </Container>
+      </MainWrapper>
+    </AppContainer>
   );
 };

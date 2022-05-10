@@ -43,12 +43,14 @@ export const LoginForm = () => {
         <TextField
           autoFocus
           fullWidth
+          autoComplete="off"
           label="Login"
           error={Boolean(errors.name)}
           {...register('name', { required: true })}
         />
         <TextField
           fullWidth
+          autoComplete="off"
           label="Password"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}

@@ -1,12 +1,12 @@
-import { Card, Button, CardActions, Stack } from '@mui/material';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
+import { Button, Card, CardActions, Stack } from '@mui/material';
 import { TimerStatus } from 'interfaces';
 import { useEffect, useState } from 'react';
 import { api } from 'services/api';
-import { stop, pause, resume } from 'services/api/timer';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
-import PauseIcon from '@mui/icons-material/Pause';
-import { StartTimerForm } from './StartTimerForm';
+import { pause, resume, stop } from 'services/api/timer';
+import { StartTimerForm } from '../forms/StartTimerForm';
 
 export const TimerControl = () => {
   const [status, setStatus] = useState<TimerStatus>();

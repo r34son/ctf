@@ -3,29 +3,36 @@ services:
   ui:
     container_name: ui
     build:
+      args:
+        - UID=${UID}
+        - GID=${GID}
       context: ./ui
     ports:
       - "3000:3000"
     volumes:
-      - ./ui:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./ui:/home/node/app
+      - /home/node/app/node_modules
   admin-ui:
-    container_name: admin-ui
+    container_name: admin-ui   
     build:
       context: ./admin-ui
+      args:
+        - UID=${UID}
+        - GID=${GID}
     ports:
       - "3001:3000"
     environment:
       WDS_SOCKET_PORT: 3001
     volumes:
-      - ./admin-ui:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./admin-ui:/home/node/app
+      - /home/node/app/node_modules
   back:
     container_name: back
     build:
       context: ./back
     depends_on:
       - postgres
+    restart: unless-stopped
     ports:
       - "3002:80"
     volumes:
@@ -38,8 +45,20 @@ services:
     image: postgres:12
     container_name: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: db
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin4@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    # volumes:
+    #   - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped

@@ -1,9 +1,11 @@
 import { useAppSelector } from 'app/hooks';
 import { authSelector } from 'features/auth/authSlice';
-import { FC, ReactElement } from 'react';
+import { FC, PropsWithChildren, ReactElement } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-export const ProtectedRoute: FC = ({ children }) => {
+export const ProtectedRoute: FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const { isAuthorized } = useAppSelector(authSelector);
   const location = useLocation();
 

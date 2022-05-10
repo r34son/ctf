@@ -22,7 +22,14 @@ export const Task = ({ task }: TaskProps) => {
   };
 
   return (
-    <Card sx={{ overflow: 'initial' }} onClick={onTaskClick}>
+    <Card
+      variant={task.solved ? 'outlined' : 'elevation'}
+      sx={{
+        overflow: 'initial',
+        borderColor: (theme) => (task.solved ? theme.palette.success.dark : ''),
+      }}
+      onClick={onTaskClick}
+    >
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" noWrap>

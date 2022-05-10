@@ -6,15 +6,15 @@ import {
   IsNotEmpty,
   IsOptional,
   IsPositive,
-  validateOrReject,
+  validateOrReject
 } from "class-validator";
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  Entity,
-  PrimaryGeneratedColumn,
+  Entity, OneToMany, PrimaryGeneratedColumn
 } from "typeorm";
+import { TeamSolvedTasks } from "./TeamSolvedTasks";
 
 @Entity()
 export class Task {
@@ -47,6 +47,9 @@ export class Task {
   @Column({ select: false })
   @IsNotEmpty({ message: "Поле flag обязательно" })
   flag: string;
+
+  @OneToMany(() => TeamSolvedTasks, teamSolvedTasks => teamSolvedTasks.task)
+  public solved!: TeamSolvedTasks[];
 
   resolve(flag: string) {
     return bcrypt.compareSync(flag, this.flag);

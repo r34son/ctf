@@ -1,9 +1,6 @@
 import {
   CreateDateColumn,
-  Entity,
-  JoinTable,
-  OneToOne,
-  PrimaryColumn,
+  Entity, ManyToOne, PrimaryColumn
 } from "typeorm";
 import { Task } from "./Task";
 import { Team } from "./Team";
@@ -19,11 +16,9 @@ export class TeamSolvedTasks {
   @CreateDateColumn({ type: "timestamp" })
   public createdAt!: Date;
 
-  @OneToOne(() => Team)
-  @JoinTable()
+  @ManyToOne(() => Team, team => team.solved)
   public team!: Team;
 
-  @OneToOne(() => Task)
-  @JoinTable()
+  @ManyToOne(() => Task, task => task.solved)
   public task!: Task;
 }

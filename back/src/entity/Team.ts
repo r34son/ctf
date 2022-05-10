@@ -4,12 +4,9 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
+  Entity, OneToMany, PrimaryGeneratedColumn
 } from "typeorm";
-import { Task } from "./Task";
+import { TeamSolvedTasks } from "./TeamSolvedTasks";
 
 @Entity()
 export class Team {
@@ -24,9 +21,8 @@ export class Team {
   @IsNotEmpty({ message: "Поле password обязательно" })
   password: string;
 
-  @ManyToMany(() => Task)
-  @JoinTable({ name: "team_solved_tasks" })
-  solvedTasks: Task[];
+  @OneToMany(() => TeamSolvedTasks, teamSolvedTasks => teamSolvedTasks.team)
+  public solved!: TeamSolvedTasks[];
 
   auth(password: string) {
     return bcrypt.compareSync(password, this.password);

@@ -2,7 +2,6 @@ import { dataSource } from "@/dataSource";
 import { errorHandler } from "@/middlewares/errorHandler";
 import { socketIoJwtAuth } from "@/middlewares/jwt";
 import cors, { CorsOptions } from "cors";
-import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -24,7 +23,7 @@ const corsOptions: CorsOptions = { origin: "*" };
     app.use("/", require("@/routes").default);
     app.use(errorHandler);
 
-    const httpServer = app.listen(80, () =>
+    const httpServer = app.listen(process.env.PORT || 80, () =>
       console.log(
         `Express server has started on port ${
           (httpServer.address() as AddressInfo).port

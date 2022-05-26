@@ -47,7 +47,7 @@ export const AdminPage = () => {
             onChange={makeOnChange(Forms.TEAM)}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Create team</Typography>
+              <Typography>Создать команду</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <CreateTeamForm />
@@ -58,7 +58,7 @@ export const AdminPage = () => {
             onChange={makeOnChange(Forms.TASK)}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Create task</Typography>
+              <Typography>Создать задание</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <UpsertTaskForm onSubmit={fetchTasks} />

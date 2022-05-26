@@ -54,7 +54,7 @@ export const LoginForm = () => {
         <TextField
           autoFocus
           fullWidth
-          label="Team name"
+          label="Название команды"
           autoComplete="username"
           error={Boolean(errors.name)}
           helperText={errors.name?.message || ' '}
@@ -62,7 +62,7 @@ export const LoginForm = () => {
         />
         <TextField
           fullWidth
-          label="Password"
+          label="Пароль"
           autoComplete="current-password"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}
@@ -83,7 +83,7 @@ export const LoginForm = () => {
           {...register('password', { required: true })}
         />
         <Button variant="contained" type="submit" disabled={isSubmitting}>
-          Login
+          Войти
         </Button>
       </Stack>
     </form>

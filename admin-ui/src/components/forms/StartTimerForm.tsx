@@ -78,7 +78,7 @@ export const StartTimerForm = () => {
         type="submit"
         startIcon={<PlayArrowIcon />}
       >
-        Start / Restart
+        Старт / Рестарт
       </LoadingButton>
     </form>
   );

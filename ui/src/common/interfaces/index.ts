@@ -12,3 +12,19 @@ export interface Task {
   points: number;
   flag: string;
 }
+
+export interface TeamSolvedTask {
+  teamId: number;
+  taskId: Task['id'];
+  createdAt: string;
+}
+
+export interface Rating extends Team {
+  totalPoints: number;
+  graph: {
+    points: Task['points'];
+    time: number;
+    title: Task['title'];
+    value: Task['points'];
+  }[];
+}

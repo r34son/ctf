@@ -9,11 +9,11 @@ import { ValidationError } from "class-validator";
 import { Request, RequestHandler, Response } from "express";
 
 type Params = { id: string };
-type SolveBody = { taskId: string, flag: string };
+type SolveBody = { taskId: string; flag: string };
 
 class TaskController {
   private taskRepository = dataSource.getRepository(Task);
-  private solvedTasksRepository = dataSource.getRepository(TeamSolvedTasks)
+  private solvedTasksRepository = dataSource.getRepository(TeamSolvedTasks);
 
   /** Task creation method. */
   create = async (request: Request<{}, any, Task>, response: Response) => {
@@ -44,16 +44,25 @@ class TaskController {
           .addSelect("task.enabled")
           .getMany()
       );
-    } else
+    } else {
+      const tasks = await this.taskRepository.find({
+        where: { enabled: true },
+        relations: ["solved"],
+      });
+
       return response.json(
-        await this.taskRepository.find({ where: { enabled: true } })
+        tasks.map(({ solved, ...task }) => ({
+          ...task,
+          solved: Boolean(solved.find((s) => s.teamId === response.locals.id)),
+        }))
       );
+    }
   };
 
   remove: RequestHandler<Params> = async (request, response) => {
     const id = +request.params.id;
     const taskToRemove = await this.taskRepository.findOneBy({ id });
-    await this.taskRepository.remove(taskToRemove);
+    if (taskToRemove) await this.taskRepository.remove(taskToRemove);
     (request.app.get("io") as SocketServer).emit("task:remove", id);
     response.sendStatus(StatusCodes.OK);
   };
@@ -102,23 +111,25 @@ class TaskController {
       .createQueryBuilder(Task, "task")
       .addSelect("task.flag")
       .where({ id: Number(taskId) })
-      .getOne()
+      .getOne();
 
     if (!task) {
       return response
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Task not found" });
+        .json({ message: "Задание не найдено." });
     }
 
-    const solved = await this.solvedTasksRepository.findOne({ where: {
-      taskId: Number(taskId),
-      teamId: Number(response.locals.id),
-    }})
+    const solved = await this.solvedTasksRepository.findOne({
+      where: {
+        taskId: Number(taskId),
+        teamId: Number(response.locals.id),
+      },
+    });
 
     if (solved) {
       return response
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Task already solved" })
+        .json({ message: "Задание уже решено." });
     }
 
     const isCorrect = await bcrypt.compare(flag, task.flag);
@@ -126,7 +137,7 @@ class TaskController {
     if (!isCorrect) {
       return response
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Incorrect flag" })
+        .json({ message: "Неверный флаг." });
     }
 
     const solvedTask = await this.solvedTasksRepository.save(
@@ -136,18 +147,16 @@ class TaskController {
       })
     );
 
-    (request.app.get("io") as SocketServer).emit(
-      "task:solve",
-      solvedTask,
-    );
+    (request.app.get("io") as SocketServer).emit("task:solve", solvedTask);
 
-    return response
-      .status(StatusCodes.OK)
-      .json({ message: "Flag accepted" })
+    return response.sendStatus(StatusCodes.OK);
   };
 
   stats: RequestHandler<any, any, any> = async (_, response) => {
-    const solvedTasks = await this.solvedTasksRepository.find({ relations: ['team', 'task'] })
+    const solvedTasks = await this.solvedTasksRepository.find({
+      relations: ["team", "task"],
+    });
+
     const stats = {};
 
     for (const solvedTask of solvedTasks) {
@@ -164,14 +173,14 @@ class TaskController {
         title,
         points,
         value: stats[name].totalPoints,
-        time: createdAt,
+        time: createdAt.valueOf(),
       });
     }
 
     return response
       .status(StatusCodes.OK)
-      .json(Object.keys(stats).map(name => ({ name, ...stats[name] })))
-  }
+      .json(Object.keys(stats).map((name) => ({ name, ...stats[name] })));
+  };
 }
 
 export default new TaskController();

@@ -5,7 +5,7 @@ import { Router } from "express";
 const router = Router();
 
 router.get("/", jwtAuth, TaskController.all);
-router.get("/stats", TaskController.stats);
+router.get("/rating", TaskController.stats);
 router.post("/solve", jwtAuth, TaskController.solve);
 router.post("/", jwtAuth, isAdmin, TaskController.create);
 router.put("/:id", jwtAuth, isAdmin, TaskController.update);

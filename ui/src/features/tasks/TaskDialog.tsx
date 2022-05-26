@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { Task } from 'common/interfaces';
 import draftToHtml from 'draftjs-to-html';
 import { forwardRef, ReactElement, Ref } from 'react';
 import { FlagForm } from './FlagForm';
@@ -68,7 +69,7 @@ export const TaskDialog = () => {
         )}
       </DialogContent>
       <DialogActions>
-        <FlagForm />
+        <FlagForm taskId={task?.id as Task['id']} />
       </DialogActions>
     </Dialog>
   );

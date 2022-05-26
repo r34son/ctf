@@ -31,7 +31,7 @@ export const StartTimerForm = () => {
         (duration as moment.Moment).format('hh:mm'),
       );
       await start(+normalizedDuration.asMilliseconds());
-      enqueueSnackbar('Timer started.', { variant: 'success' });
+      enqueueSnackbar('Таймер запущен.', { variant: 'success' });
       reset();
     } catch (error) {
       const axiosError = error as AxiosError;

@@ -1,11 +1,10 @@
-import { Router } from "express";
 import AuthController from "@/controllers/AuthController";
-import { jwtAuth } from "@/middlewares/jwt";
+import { Router } from "express";
 import rateLimit from "express-rate-limit";
 
 const loginRateLimiter = rateLimit({
   message:
-    "Too many login attempts from this IP, please try again after an minute",
+    "Превышен лимит для попыток авторизации. Пожалуйста, повторите позже.",
   max: 5, // Limit each IP to 5 requests per `window` (here, per 1 minute)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers

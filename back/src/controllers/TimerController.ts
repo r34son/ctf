@@ -1,7 +1,7 @@
 import { SSE } from "@/common/SSE";
 import { StatusCodes } from "@/consts/statusCodes";
 import { getSSEBody } from "@/utils";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 
 export enum TimerStatus {
   RUNNING = "running",
@@ -65,7 +65,10 @@ class TimerController extends SSE {
     if (this.status !== TimerStatus.PAUSED)
       return response
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "You can resume timer only if it paused right now" });
+        .json({
+          message:
+            "Вы можете продолжить таймер только если он находится на паузе",
+        });
     this.endDate = Date.now() + this.remainingTime;
     this.status = TimerStatus.RUNNING;
     this.emit("resume", this.endDate);

@@ -5,7 +5,7 @@ import { Tasks } from './Tasks';
 import { getTasks, tasksSelector } from './tasksSlice';
 
 export const TasksPage = () => {
-  const { loading } = useAppSelector(tasksSelector);
+  const { data } = useAppSelector(tasksSelector);
 
   const dispatch = useAppDispatch();
 
@@ -16,7 +16,7 @@ export const TasksPage = () => {
     };
   }, [dispatch]);
 
-  if (!loading)
+  if (data.length)
     return (
       <>
         <Tasks />

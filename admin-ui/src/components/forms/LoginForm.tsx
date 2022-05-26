@@ -44,14 +44,14 @@ export const LoginForm = () => {
           autoFocus
           fullWidth
           autoComplete="off"
-          label="Login"
+          label="Логин"
           error={Boolean(errors.name)}
           {...register('name', { required: true })}
         />
         <TextField
           fullWidth
           autoComplete="off"
-          label="Password"
+          label="Пароль"
           type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password)}
           InputProps={{
@@ -70,7 +70,7 @@ export const LoginForm = () => {
           {...register('password', { required: true })}
         />
         <Button variant="contained" type="submit">
-          Login
+          Войти
         </Button>
       </Stack>
     </form>

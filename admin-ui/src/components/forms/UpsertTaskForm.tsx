@@ -74,7 +74,7 @@ export const UpsertTaskForm = ({
             <TextField
               autoFocus
               fullWidth
-              label="Title"
+              label="Заголовок"
               error={Boolean(error)}
               {...field}
               inputRef={ref}
@@ -91,7 +91,7 @@ export const UpsertTaskForm = ({
               <TextField
                 select
                 fullWidth
-                label="Category"
+                label="Категория"
                 error={invalid}
                 {...field}
                 inputRef={ref}
@@ -115,7 +115,7 @@ export const UpsertTaskForm = ({
               <NumberFormat
                 allowNegative={false}
                 decimalScale={0}
-                label="Points"
+                label="Очки"
                 customInput={TextField}
                 error={invalid}
                 inputRef={ref}
@@ -147,7 +147,7 @@ export const UpsertTaskForm = ({
           }) => (
             <TextField
               fullWidth
-              label="Flag"
+              label="Флаг"
               error={invalid}
               value={value}
               {...field}
@@ -161,7 +161,7 @@ export const UpsertTaskForm = ({
             variant="outlined"
             type="submit"
           >
-            Create
+            Создать
           </LoadingButton>
         )}
       </Stack>

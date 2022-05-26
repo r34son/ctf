@@ -14,7 +14,7 @@ const Container = styled.div`
 export const LoginPage = () => (
   <Container>
     <Typography variant="h4" gutterBottom>
-      Login
+      Вход
     </Typography>
     <LoginForm />
   </Container>

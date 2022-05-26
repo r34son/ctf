@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Drawer, Typography } from '@mui/material';
 import { LoginForm } from 'features/auth/LoginForm';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
@@ -31,7 +31,7 @@ export const LoginPage = () => {
     >
       <Container>
         <Typography variant="h4" gutterBottom>
-          Login
+          Вход
         </Typography>
         <LoginForm />
       </Container>

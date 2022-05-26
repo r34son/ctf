@@ -33,19 +33,19 @@ export const CreateTeamForm = () => {
         <TextField
           autoFocus
           fullWidth
-          label="Team name"
+          label="Название команды"
           error={Boolean(errors.name)}
           {...register('name', { required: true })}
         />
         <TextField
           fullWidth
           autoComplete="new-password"
-          label="Password"
+          label="Пароль"
           error={Boolean(errors.password)}
           {...register('password', { required: true })}
         />
         <LoadingButton loading={isSubmitting} variant="outlined" type="submit">
-          Create
+          Создать
         </LoadingButton>
       </Stack>
     </form>

@@ -44,21 +44,21 @@ export const TimerControl = () => {
             onClick={onPauseClick}
             startIcon={<PauseIcon />}
           >
-            Pause
+            Пауза
           </Button>
           <Button
             disabled={!isPaused}
             onClick={onResumeClick}
             startIcon={<PlayArrowIcon />}
           >
-            Resume
+            Продолжить
           </Button>
           <Button
             disabled={!isRunning}
             onClick={onStopClick}
             startIcon={<StopIcon />}
           >
-            Stop
+            Стоп
           </Button>
         </Stack>
       </CardActions>

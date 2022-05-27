@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Drawer, Typography } from '@mui/material';
 import { LoginForm } from 'features/auth/LoginForm';
+import { PublicPage } from 'features/public/PublicPage';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +24,8 @@ export const LoginPage = () => {
   const goBack = () => navigate(-1);
 
   return (
+    <>
+    <PublicPage />
     <Drawer
       open={open}
       anchor="left"
@@ -36,5 +39,6 @@ export const LoginPage = () => {
         <LoginForm />
       </Container>
     </Drawer>
+    </>
   );
 };

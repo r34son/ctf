@@ -1,6 +1,8 @@
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 
+import './background.css';
+
 export const Background = () => {
   const particlesInit = async (main: any) => {
     console.log(main);
@@ -10,6 +12,7 @@ export const Background = () => {
 
   return (
     <Particles
+      className="particles-background"
       id="tsparticles"
       init={particlesInit}
       options={{

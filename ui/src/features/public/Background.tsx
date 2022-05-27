@@ -5,8 +5,6 @@ import './background.css';
 
 export const Background = () => {
   const particlesInit = async (main: any) => {
-    console.log(main);
-
     await loadFull(main);
   };
 

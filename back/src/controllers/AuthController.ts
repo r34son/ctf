@@ -17,12 +17,12 @@ class AuthController {
     if (!team)
       return response
         .status(StatusCodes.BAD_REQUEST)
-        .json({ name: "Invalid name" });
+        .json({ name: "Неверное название команды" });
 
     if (!team.auth(password))
       return response
         .status(StatusCodes.BAD_REQUEST)
-        .json({ password: "Invalid password" });
+        .json({ password: "Неверный пароль" });
 
     const teamPayload = { id: team.id, name: team.name };
     const accessToken = TokenService.getAccessToken(teamPayload);

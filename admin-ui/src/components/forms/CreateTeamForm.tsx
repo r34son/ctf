@@ -18,7 +18,7 @@ export const CreateTeamForm = () => {
   const onSubmit: SubmitHandler<TeamCredentials> = async (data) => {
     try {
       await create(data);
-      enqueueSnackbar(`Team ${data.name} created.`, { variant: 'success' });
+      enqueueSnackbar(`Команда ${data.name} создана.`, { variant: 'success' });
       reset();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
